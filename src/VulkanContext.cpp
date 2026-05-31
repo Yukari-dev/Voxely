@@ -229,6 +229,27 @@ void VulkanContext::PickPhysicalDevice(){
 
     QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
 
+    auto swapchain = QuerySwapChainSupport(m_PhysicalDevice);
+
+    std::cout
+        << "Graphics Queue Family: "
+        << indices.graphicsFamily.value()
+        << '\n';
+
+    std::cout
+        << "Present Queue: "
+        << indices.presentFamily.value()
+        << '\n';
+
+    std::cout
+        << "Formats: "
+        << swapchain.formats.size()
+        << '\n';
+
+    std::cout
+        << "Present Modes: "
+        << swapchain.presentModes.size()
+        << '\n';
 
     std::cout << "Selected GPU: " << props.deviceName << '\n';
 }
@@ -334,6 +355,50 @@ bool VulkanContext::IsDeviceSuitable(VkPhysicalDevice device){
     QueueFamilyIndices indices = FindQueueFamilies(device);
 
     bool extensionsSupported = CheckDeviceExtensionSupport(device);
+    
+    bool swapChainSatisified = false;
+    if(extensionsSupported){
+        auto details = QuerySwapChainSupport(device);
 
-    return indices.IsComplete() && extensionsSupported;
+        swapChainSatisified = !details.formats.empty() && !details.presentModes.empty();
+    }
+
+    return indices.IsComplete() && extensionsSupported && swapChainSatisified;
 }
+
+SwapChainSupportDetails VulkanContext::QuerySwapChainSupport(VkPhysicalDevice device){
+    SwapChainSupportDetails details;
+
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+        device, m_Surface, &details.capabilities
+    );
+
+    uint32_t formatCount = 0;
+
+    vkGetPhysicalDeviceSurfaceFormatsKHR(
+        device, m_Surface, &formatCount, nullptr
+    );
+
+    if(formatCount != 0){
+        details.formats.resize(formatCount);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(
+            device, m_Surface, &formatCount, details.formats.data()
+        );
+    }
+
+    uint32_t presentModesCount = 0;
+
+    vkGetPhysicalDeviceSurfacePresentModesKHR(
+        device, m_Surface, &presentModesCount, nullptr
+    );
+
+    if(presentModesCount != 0){
+        details.presentModes.resize(presentModesCount);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(
+            device, m_Surface, &presentModesCount, details.presentModes.data()
+        );
+    }
+
+    return details;
+}
+
