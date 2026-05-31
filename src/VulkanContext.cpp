@@ -3,23 +3,68 @@
 #include <iostream>
 #include <cstring>
 
+
+static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT severity,
+    VkDebugUtilsMessageTypeFlagsEXT type,
+    const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
+    void *userData){
+    std::cerr
+        << "[Validation] "
+        << callbackData->pMessage
+        << '\n';
+    return VK_FALSE;
+}
+
+VkResult CreateDebugUtilsMessengerEXT(
+    VkInstance instance,
+    const VkDebugUtilsMessengerCreateInfoEXT *createInfo,
+    const VkAllocationCallbacks *allocator,
+    VkDebugUtilsMessengerEXT *messenger){
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if(func){
+        return func(instance, createInfo, allocator, messenger);
+    }
+
+    return VK_ERROR_EXTENSION_NOT_PRESENT;
+}
+
+void DestroyDebugUtilsMessengerEXT(
+    VkInstance instance,
+    VkDebugUtilsMessengerEXT messenger,
+    const VkAllocationCallbacks *allocator){
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+    if(func){
+        func(instance, messenger, allocator);
+    }
+}
+
+
 VulkanContext::VulkanContext(){
     CreateInstance();
+    SetupDebugMessenger();
 }
 
 VulkanContext::~VulkanContext(){
-    if(m_Instance)
+    if(m_EnableValidationLayers){
+        DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
+    }
+    if(m_Instance){
         vkDestroyInstance(m_Instance, nullptr);
+    }
 }
 
 void VulkanContext::CreateInstance(){
+    std::cout << "Validation enabled: "
+          << m_EnableValidationLayers
+          << '\n';
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "Voxely";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.pEngineName = "Voxely Engine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.apiVersion = VK_API_VERSION_1_4;
+    appInfo.apiVersion = VK_API_VERSION_1_3;
 
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -38,6 +83,11 @@ void VulkanContext::CreateInstance(){
         createInfo.enabledLayerCount = 0;
     }
 
+    auto extensions = GetRequiredInstanceExtensions();
+
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+    createInfo.ppEnabledExtensionNames = extensions.data();
+
     if(vkCreateInstance(
         &createInfo,
         nullptr, &m_Instance
@@ -48,16 +98,16 @@ void VulkanContext::CreateInstance(){
 }
 
 bool VulkanContext::CheckValidationLayers(){
-    uint32_t layerCount;
+    uint32_t layersCount;
 
     vkEnumerateInstanceLayerProperties(
-        &layerCount, nullptr
+        &layersCount, nullptr
     );
 
-    std::vector<VkLayerProperties> layers(layerCount);
+    std::vector<VkLayerProperties> layers(layersCount);
 
     vkEnumerateInstanceLayerProperties(
-        &layerCount,
+        &layersCount,
         layers.data()
     );
 
@@ -73,4 +123,55 @@ bool VulkanContext::CheckValidationLayers(){
     }
 
     return true;
+}
+
+std::vector<const char*> VulkanContext::GetRequiredInstanceExtensions(){
+    uint32_t glfwExtensionCount = 0;
+
+    const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+    std::vector<const char*> extensions(glfwExtensions, glfwExtensions+glfwExtensionCount);
+
+    if(m_EnableValidationLayers)
+        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+
+    return extensions;
+}
+
+void VulkanContext::SetupDebugMessenger(){
+    if(!m_EnableValidationLayers) return;
+
+    VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+
+    createInfo.messageSeverity = 
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | 
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+
+    createInfo.messageType = 
+        VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+        VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+        VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    
+
+    createInfo.pfnUserCallback = DebugCallback;
+
+    VkResult result =
+        CreateDebugUtilsMessengerEXT(
+            m_Instance,
+            &createInfo,
+            nullptr,
+            &m_DebugMessenger
+        );
+
+    std::cout << "Messenger result: "
+            << result
+            << '\n';
+
+    if(result != VK_SUCCESS)
+    {
+        throw std::runtime_error(
+            "Failed to create debug messenger."
+        );
+    }
 }
