@@ -83,6 +83,8 @@ private:
     std::vector<VkImage> m_SwapChainImages;
     std::vector<VkImageView> m_SwapChainImageViews;
     VkRenderPass m_RenderPass{};
+    VkPipelineLayout m_PipelineLayout{};
+    VkPipeline m_GraphicsPipeline;
 
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
