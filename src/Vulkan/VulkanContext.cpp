@@ -8,6 +8,7 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     CreateLogicalDevice();
     CreateSwapChain();
     CreateImageViews();
+    CreateRenderPass();
 }
 
 VulkanContext::~VulkanContext(){
@@ -18,6 +19,9 @@ VulkanContext::~VulkanContext(){
     if(m_SwapChain)
         vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
 
+    if(m_RenderPass)
+        vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
+    
     if(m_Device)
         vkDestroyDevice(m_Device, nullptr);
 

@@ -39,6 +39,7 @@ private:
     bool IsDeviceSuitable(VkPhysicalDevice device);
     void CreateSwapChain();
     void CreateImageViews();
+    void CreateRenderPass();
 
     void DestroyDebugUtilsMessengerEXT(
         VkInstance instance, 
@@ -77,6 +78,9 @@ private:
     VkExtent2D m_SwapChainExtent{};
     std::vector<VkImage> m_SwapChainImages;
     std::vector<VkImageView> m_SwapChainImageViews;
+    VkRenderPass m_RenderPass{};
+
+
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
 
     const std::vector<char const*> m_ValidationLayers = {

@@ -15,7 +15,7 @@ add_executable(Voxely
     src/Vulkan/VulkanInstance.cpp
     src/Vulkan/VulkanDebug.cpp
     src/Vulkan/VulkanDevice.cpp
-    src/Vulkan/VulkanSwapChain.cpp
+    src/Vulkan/VulkanRendering.cpp
     src/Vulkan/VulkanSurface.cpp
 )
 
