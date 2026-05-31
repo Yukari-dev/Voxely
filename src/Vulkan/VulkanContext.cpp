@@ -12,13 +12,13 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     CreateGraphicsPipeline();
     CreateFramebuffers();
     CreateCommandPool();
+    CreateCommandBuffers();
 }
 
 VulkanContext::~VulkanContext(){
     for(auto view : m_SwapChainImageViews)
         vkDestroyImageView(m_Device, view, nullptr);
     
-
     for(auto framebuffer : m_SwapChainFramebuffers)
         vkDestroyFramebuffer(m_Device, framebuffer, nullptr);
     

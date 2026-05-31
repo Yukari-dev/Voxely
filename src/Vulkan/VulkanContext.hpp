@@ -44,6 +44,7 @@ private:
     void CreateGraphicsPipeline();
     void CreateFramebuffers();
     void CreateCommandPool();
+    void CreateCommandBuffers();
 
     void DestroyDebugUtilsMessengerEXT(
         VkInstance instance, 
@@ -89,6 +90,7 @@ private:
     VkPipeline m_GraphicsPipeline;
     std::vector<VkFramebuffer> m_SwapChainFramebuffers;
     VkCommandPool m_CommandPool;
+    std::vector<VkCommandBuffer> m_CommandBuffers;
 
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
