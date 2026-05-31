@@ -32,6 +32,11 @@ private:
     void CreateLogicalDevice();
     bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
     bool IsDeviceSuitable(VkPhysicalDevice device);
+    void CreateSwapChain();
+
+    VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats);
+    VkPresentModeKHR ChooseSwapSurfacePresentModes(const std::vector<VkPresentModeKHR>& presentModes);
+    VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 
     SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 
@@ -39,12 +44,17 @@ private:
 
     std::vector<const char*> GetRequiredInstanceExtensions();
 
+    GLFWwindow *m_Window;
     VkInstance m_Instance;
     VkSurfaceKHR m_Surface;
     VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
     VkDevice m_Device{};
     VkQueue m_GraphicsQueue{};
     VkQueue m_PresentQueue{};
+    VkSwapchainKHR m_SwapChain{};
+    VkFormat m_SwapChainImageFormat{};
+    VkExtent2D m_SwapChainExtent{};
+    std::vector<VkImage> m_SwapChainImages;
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
 
