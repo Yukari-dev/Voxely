@@ -1,8 +1,5 @@
 #include "VulkanContext.hpp"
 
-
-
-
 VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     CreateInstance();
     SetupDebugMessenger();
@@ -10,9 +7,14 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     PickPhysicalDevice();
     CreateLogicalDevice();
     CreateSwapChain();
+    CreateImageViews();
 }
 
 VulkanContext::~VulkanContext(){
+    for(auto view : m_SwapChainImageViews){
+        vkDestroyImageView(m_Device, view, nullptr);
+    }
+
     if(m_SwapChain)
         vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
 

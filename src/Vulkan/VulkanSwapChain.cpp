@@ -132,7 +132,6 @@ VkSurfaceFormatKHR VulkanContext::ChooseSwapSurfaceFormat(const std::vector<VkSu
     return formats[0];
 }
 
-
 VkPresentModeKHR VulkanContext::ChooseSwapSurfacePresentModes(const std::vector<VkPresentModeKHR>& presentModes){
     for(const auto& mode : presentModes){
         if(mode == VK_PRESENT_MODE_MAILBOX_KHR){
@@ -174,3 +173,41 @@ VkExtent2D VulkanContext::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR &capab
 
     return actualExtent;
 }
+
+void VulkanContext::CreateImageViews(){
+    m_SwapChainImageViews.resize(
+        m_SwapChainImages.size()
+    );
+
+    for(size_t i = 0; i < m_SwapChainImages.size(); i++){
+        VkImageViewCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        createInfo.image = m_SwapChainImages[i];
+
+        createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        createInfo.format = m_SwapChainImageFormat;
+        createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        
+        createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+
+        createInfo.subresourceRange.baseMipLevel = 0;
+        createInfo.subresourceRange.levelCount = 1;
+        createInfo.subresourceRange.baseArrayLayer = 0;
+        createInfo.subresourceRange.layerCount = 1;
+        
+        if(vkCreateImageView(
+            m_Device, &createInfo, nullptr, &m_SwapChainImageViews[i]
+        ) != VK_SUCCESS){
+            throw std::runtime_error("Failed to Create Image View.");
+        }
+    }
+
+    std::cout << "Created " << m_SwapChainImageViews.size() << " image views.\n";
+
+}
+
+
+
