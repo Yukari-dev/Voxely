@@ -16,11 +16,18 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
 }
 
 VulkanContext::~VulkanContext(){
+    if(m_PipelineLayout)
+        vkDestroyPipelineLayout(m_Device, m_PipelineLayout, nullptr);
+
+    if(m_GraphicsPipeline)
+        vkDestroyPipeline(m_Device, m_GraphicsPipeline, nullptr);
+
     for(auto view : m_SwapChainImageViews)
         vkDestroyImageView(m_Device, view, nullptr);
     
     for(auto framebuffer : m_SwapChainFramebuffers)
         vkDestroyFramebuffer(m_Device, framebuffer, nullptr);
+    
     
     if(m_CommandPool)
         vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
