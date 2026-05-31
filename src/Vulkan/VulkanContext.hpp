@@ -43,6 +43,7 @@ private:
     void CreateRenderPass();
     void CreateGraphicsPipeline();
     void CreateFramebuffers();
+    void CreateCommandPool();
 
     void DestroyDebugUtilsMessengerEXT(
         VkInstance instance, 
@@ -87,6 +88,8 @@ private:
     VkPipelineLayout m_PipelineLayout{};
     VkPipeline m_GraphicsPipeline;
     std::vector<VkFramebuffer> m_SwapChainFramebuffers;
+    VkCommandPool m_CommandPool;
+
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
 

@@ -11,6 +11,7 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     CreateRenderPass();
     CreateGraphicsPipeline();
     CreateFramebuffers();
+    CreateCommandPool();
 }
 
 VulkanContext::~VulkanContext(){
@@ -21,7 +22,9 @@ VulkanContext::~VulkanContext(){
     for(auto framebuffer : m_SwapChainFramebuffers)
         vkDestroyFramebuffer(m_Device, framebuffer, nullptr);
     
-
+    if(m_CommandPool)
+        vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
+    
     if(m_SwapChain)
         vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
 

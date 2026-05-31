@@ -119,7 +119,7 @@ void VulkanContext::CreateGraphicsPipeline(){
 
     if(vkCreatePipelineLayout(
         m_Device, &pipelineLayoutInfo, nullptr, &m_PipelineLayout
-    )){ 
+    ) != VK_SUCCESS){ 
         throw std::runtime_error("Failed to Create Pipeline Layout.");
     }
 
@@ -153,7 +153,7 @@ void VulkanContext::CreateGraphicsPipeline(){
 
     if(vkCreateGraphicsPipelines(
         m_Device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline 
-    )){
+    ) != VK_SUCCESS){
         throw std::runtime_error("Failed to Create Graphics Pipeline");
     }
 

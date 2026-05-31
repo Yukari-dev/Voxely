@@ -256,7 +256,7 @@ void VulkanContext::CreateRenderPass(){
 
     if(vkCreateRenderPass(
         m_Device, &createInfo, nullptr, &m_RenderPass
-    )){
+    ) != VK_SUCCESS){
         throw std::runtime_error("Failed to Create Render Pass.");
     }
 
@@ -287,7 +287,7 @@ void VulkanContext::CreateFramebuffers(){
 
         if(vkCreateFramebuffer(
             m_Device, &framebufferInfo, nullptr, &m_SwapChainFramebuffers[i]
-        )){
+        ) != VK_SUCCESS){
             throw std::runtime_error("Failed to Create Framebuffer.");
         }
 
@@ -296,3 +296,18 @@ void VulkanContext::CreateFramebuffers(){
     std::cout << "Created " << m_SwapChainFramebuffers.size() << " framebuffers\n";
 }
 
+void VulkanContext::CreateCommandPool(){
+    QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
+    VkCommandPoolCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    createInfo.queueFamilyIndex = indices.graphicsFamily.value();
+    createInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+    if(vkCreateCommandPool(
+        m_Device, &createInfo, nullptr, &m_CommandPool
+    )){
+        throw std::runtime_error("Failed to Create Command Pool.");
+    }
+
+    std::cout << "Command Pool Created.\n";
+}
