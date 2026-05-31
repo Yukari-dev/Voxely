@@ -8,6 +8,7 @@
 #include <cstring>
 #include <set>
 #include <algorithm>
+#include <fstream>
 
 struct QueueFamilyIndices{
     std::optional<uint32_t> graphicsFamily;
@@ -40,6 +41,7 @@ private:
     void CreateSwapChain();
     void CreateImageViews();
     void CreateRenderPass();
+    void CreateGraphicsPipeline();
 
     void DestroyDebugUtilsMessengerEXT(
         VkInstance instance, 
@@ -65,6 +67,8 @@ private:
     SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
     QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
     std::vector<const char*> GetRequiredInstanceExtensions();
+    std::vector<char> ReadFile(const std::string &filename);
+    VkShaderModule CreateShaderModule(const std::vector<char> &code);
 
     GLFWwindow *m_Window;
     VkInstance m_Instance;

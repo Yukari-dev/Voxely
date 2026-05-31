@@ -9,6 +9,7 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     CreateSwapChain();
     CreateImageViews();
     CreateRenderPass();
+    CreateGraphicsPipeline();
 }
 
 VulkanContext::~VulkanContext(){

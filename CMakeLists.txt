@@ -17,6 +17,9 @@ add_executable(Voxely
     src/Vulkan/VulkanDevice.cpp
     src/Vulkan/VulkanRendering.cpp
     src/Vulkan/VulkanSurface.cpp
+    src/Vulkan/VulkanPipeline.cpp
+    src/Core/Paths.hpp
+    src/Core/Paths.cpp
 )
 
 target_link_libraries(
