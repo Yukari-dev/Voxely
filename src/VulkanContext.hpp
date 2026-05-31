@@ -2,6 +2,16 @@
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <optional>
+
+struct QueueFamilyIndices{
+    std::optional<uint32_t> graphicsFamily;
+    std::optional<uint32_t> presentFamily;
+
+    bool IsComplete() const{
+        return graphicsFamily.has_value() && presentFamily.has_value();
+    }
+};
 
 class VulkanContext{
 public:
@@ -13,6 +23,8 @@ private:
     void SetupDebugMessenger();
     void CreateSurface(GLFWwindow *window);
     void PickPhysicalDevice();
+
+    QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 
     std::vector<const char*> GetRequiredInstanceExtensions();
 

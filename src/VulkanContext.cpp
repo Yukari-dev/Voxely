@@ -205,13 +205,70 @@ void VulkanContext::PickPhysicalDevice(){
         devices.data()
     );
 
-    m_PhysicalDevice = devices[0];
+    for(const auto& device : devices){
+        QueueFamilyIndices indices = FindQueueFamilies(device);
+
+        if(indices.IsComplete()){
+            m_PhysicalDevice = device;
+            break;
+        }
+    }
+
+    if(m_PhysicalDevice == VK_NULL_HANDLE){
+        throw std::runtime_error("No suitable GPU found.");
+    }
+
 
     VkPhysicalDeviceProperties props;
     vkGetPhysicalDeviceProperties(
         m_PhysicalDevice, &props
     );
 
+    QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
+
+    std::cout
+        << "Graphics Queue Family: "
+        << indices.graphicsFamily.value()
+        << '\n';
+
+    std::cout
+        << "Present Queue: "
+        << indices.presentFamily.value()
+        << '\n';
+
     std::cout << "Selected GPU: " << props.deviceName << '\n';
 }
 
+
+QueueFamilyIndices VulkanContext::FindQueueFamilies(VkPhysicalDevice device){
+    QueueFamilyIndices indices;
+
+    uint32_t queueFamilyCount = 0;
+
+    vkGetPhysicalDeviceQueueFamilyProperties(
+        device, &queueFamilyCount, nullptr
+    );
+
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+
+    vkGetPhysicalDeviceQueueFamilyProperties(
+        device, &queueFamilyCount, queueFamilies.data()
+    );  
+
+    for(uint32_t i = 0; i < queueFamilyCount; i++){
+        if(queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT){
+            indices.graphicsFamily = i;
+        }
+
+        VkBool32 presentSupport = VK_FALSE;
+        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_Surface, &presentSupport);
+        if(presentSupport)
+            indices.presentFamily = i;
+
+        if(indices.IsComplete())
+            break;
+
+    }
+
+    return indices;
+}
