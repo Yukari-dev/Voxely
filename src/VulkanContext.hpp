@@ -23,6 +23,9 @@ private:
     void SetupDebugMessenger();
     void CreateSurface(GLFWwindow *window);
     void PickPhysicalDevice();
+    void CreateLogicalDevice();
+    bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
+    bool IsDeviceSuitable(VkPhysicalDevice device);
 
     QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 
@@ -31,11 +34,18 @@ private:
     VkInstance m_Instance;
     VkSurfaceKHR m_Surface;
     VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+    VkDevice m_Device{};
+    VkQueue m_GraphicsQueue{};
+    VkQueue m_PresentQueue{};
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
 
     const std::vector<char const*> m_ValidationLayers = {
         "VK_LAYER_KHRONOS_validation"
+    };
+
+    const std::vector<const char*> m_DeviceExtensions = {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
     };
 
     #ifdef NDEBUG
