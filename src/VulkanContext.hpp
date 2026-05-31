@@ -5,20 +5,23 @@
 
 class VulkanContext{
 public:
-    VulkanContext();
+    VulkanContext(GLFWwindow *window);
     ~VulkanContext();
 private:
     void CreateInstance();
     bool CheckValidationLayers();
     void SetupDebugMessenger();
+    void CreateSurface(GLFWwindow *window);
+
     std::vector<const char*> GetRequiredInstanceExtensions();
 
     VkInstance m_Instance;
+    VkSurfaceKHR m_Surface;
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
 
     const std::vector<char const*> m_ValidationLayers = {
-        "VK_LAYER_THIS_DOES_NOT_EXIST"
+        "VK_LAYER_KHRONOS_validation"
     };
 
     #ifdef NDEBUG

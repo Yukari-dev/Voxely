@@ -40,18 +40,21 @@ void DestroyDebugUtilsMessengerEXT(
 }
 
 
-VulkanContext::VulkanContext(){
+VulkanContext::VulkanContext(GLFWwindow *window){
     CreateInstance();
     SetupDebugMessenger();
+    CreateSurface(window);
 }
 
 VulkanContext::~VulkanContext(){
-    if(m_EnableValidationLayers){
+    if(m_Surface)
+        vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
+
+    if(m_EnableValidationLayers)
         DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
-    }
-    if(m_Instance){
+
+    if(m_Instance)
         vkDestroyInstance(m_Instance, nullptr);
-    }
 }
 
 void VulkanContext::CreateInstance(){
@@ -164,9 +167,6 @@ void VulkanContext::SetupDebugMessenger(){
             &m_DebugMessenger
         );
 
-    std::cout << "Messenger result: "
-            << result
-            << '\n';
 
     if(result != VK_SUCCESS)
     {
@@ -174,4 +174,14 @@ void VulkanContext::SetupDebugMessenger(){
             "Failed to create debug messenger."
         );
     }
+    std::cout << "Debug Messenger Created.\n";
 }
+
+void VulkanContext::CreateSurface(GLFWwindow *window){
+    if(glfwCreateWindowSurface(m_Instance, window, nullptr, &m_Surface) != VK_SUCCESS){
+        throw std::runtime_error("Failed to create Window Surface.");
+    }
+
+    std::cout << "Window Surface Created.\n";
+}
+
