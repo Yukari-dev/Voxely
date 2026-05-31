@@ -12,11 +12,13 @@ private:
     bool CheckValidationLayers();
     void SetupDebugMessenger();
     void CreateSurface(GLFWwindow *window);
+    void PickPhysicalDevice();
 
     std::vector<const char*> GetRequiredInstanceExtensions();
 
     VkInstance m_Instance;
     VkSurfaceKHR m_Surface;
+    VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
 

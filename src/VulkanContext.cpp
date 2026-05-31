@@ -44,6 +44,7 @@ VulkanContext::VulkanContext(GLFWwindow *window){
     CreateInstance();
     SetupDebugMessenger();
     CreateSurface(window);
+    PickPhysicalDevice();
 }
 
 VulkanContext::~VulkanContext(){
@@ -183,5 +184,34 @@ void VulkanContext::CreateSurface(GLFWwindow *window){
     }
 
     std::cout << "Window Surface Created.\n";
+}
+
+void VulkanContext::PickPhysicalDevice(){
+    uint32_t deviceCount;
+
+    vkEnumeratePhysicalDevices(
+        m_Instance, &deviceCount, nullptr
+    );
+
+    if(deviceCount == 0){
+        throw std::runtime_error("No Vulkan GPUs found.");
+    }
+
+    std::vector<VkPhysicalDevice> devices(deviceCount);
+
+    vkEnumeratePhysicalDevices(
+        m_Instance,
+        &deviceCount,
+        devices.data()
+    );
+
+    m_PhysicalDevice = devices[0];
+
+    VkPhysicalDeviceProperties props;
+    vkGetPhysicalDeviceProperties(
+        m_PhysicalDevice, &props
+    );
+
+    std::cout << "Selected GPU: " << props.deviceName << '\n';
 }
 
