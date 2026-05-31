@@ -12,7 +12,6 @@ struct QueueFamilyIndices{
         return graphicsFamily.has_value() && presentFamily.has_value();
     }
 };
-
 class VulkanContext{
 public:
     VulkanContext(GLFWwindow *window);

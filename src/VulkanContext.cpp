@@ -213,6 +213,7 @@ void VulkanContext::PickPhysicalDevice(){
     for(const auto& device : devices){
         if(IsDeviceSuitable(device)){
             m_PhysicalDevice = device;
+            break;
         }
     }
 
@@ -228,15 +229,6 @@ void VulkanContext::PickPhysicalDevice(){
 
     QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
 
-    std::cout
-        << "Graphics Queue Family: "
-        << indices.graphicsFamily.value()
-        << '\n';
-
-    std::cout
-        << "Present Queue: "
-        << indices.presentFamily.value()
-        << '\n';
 
     std::cout << "Selected GPU: " << props.deviceName << '\n';
 }
@@ -320,17 +312,6 @@ void VulkanContext::CreateLogicalDevice(){
     createInfo.enabledExtensionCount = static_cast<uint32_t>(m_DeviceExtensions.size());
     createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();
 
-    if(m_EnableValidationLayers)
-    {
-        createInfo.enabledLayerCount =
-            static_cast<uint32_t>(
-                m_ValidationLayers.size()
-            );
-
-        createInfo.ppEnabledLayerNames =
-            m_ValidationLayers.data();
-    }
-
     if(vkCreateDevice(
         m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS
     ){
@@ -348,7 +329,6 @@ void VulkanContext::CreateLogicalDevice(){
     std::cout << "Logical Device Created.\n";
 
 }
-
 
 bool VulkanContext::IsDeviceSuitable(VkPhysicalDevice device){
     QueueFamilyIndices indices = FindQueueFamilies(device);
