@@ -3,6 +3,11 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <optional>
+#include <stdexcept>
+#include <iostream>
+#include <cstring>
+#include <set>
+#include <algorithm>
 
 struct QueueFamilyIndices{
     std::optional<uint32_t> graphicsFamily;
@@ -33,15 +38,29 @@ private:
     bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
     bool IsDeviceSuitable(VkPhysicalDevice device);
     void CreateSwapChain();
+    void DestroyDebugUtilsMessengerEXT(
+        VkInstance instance, 
+        VkDebugUtilsMessengerEXT messenger, 
+        const VkAllocationCallbacks *allocator
+    );
+    static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+        VkDebugUtilsMessageSeverityFlagBitsEXT severity,
+        VkDebugUtilsMessageTypeFlagsEXT type,
+        const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
+        void *userData);
+
+    VkResult CreateDebugUtilsMessengerEXT(
+        VkInstance instance,
+        const VkDebugUtilsMessengerCreateInfoEXT *createInfo,
+        const VkAllocationCallbacks *allocator,
+        VkDebugUtilsMessengerEXT *messenger
+    );
 
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats);
     VkPresentModeKHR ChooseSwapSurfacePresentModes(const std::vector<VkPresentModeKHR>& presentModes);
     VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
-
     SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
-
     QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
-
     std::vector<const char*> GetRequiredInstanceExtensions();
 
     GLFWwindow *m_Window;
@@ -55,7 +74,6 @@ private:
     VkFormat m_SwapChainImageFormat{};
     VkExtent2D m_SwapChainExtent{};
     std::vector<VkImage> m_SwapChainImages;
-
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
 
     const std::vector<char const*> m_ValidationLayers = {

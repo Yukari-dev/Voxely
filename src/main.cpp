@@ -1,5 +1,5 @@
 #include "Window.hpp"
-#include "VulkanContext.hpp"
+#include "Vulkan/VulkanContext.hpp"
 
 int main(void){
     Window window(1280, 720, "Voxely");

@@ -11,7 +11,12 @@ find_package(glm REQUIRED)
 add_executable(Voxely
     src/main.cpp
     src/Window.cpp
-    src/VulkanContext.cpp
+    src/Vulkan/VulkanContext.cpp
+    src/Vulkan/VulkanInstance.cpp
+    src/Vulkan/VulkanDebug.cpp
+    src/Vulkan/VulkanDevice.cpp
+    src/Vulkan/VulkanSwapChain.cpp
+    src/Vulkan/VulkanSurface.cpp
 )
 
 target_link_libraries(
