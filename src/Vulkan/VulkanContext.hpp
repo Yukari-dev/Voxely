@@ -1,5 +1,6 @@
 #pragma once
 #include <vulkan/vulkan.h>
+#include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <optional>
@@ -23,6 +24,11 @@ struct SwapChainSupportDetails{
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
+};
+
+struct Vertex{
+    glm::vec3 position;
+    glm::vec3 color;
 };
 
 class VulkanContext{
@@ -49,6 +55,7 @@ private:
     void CreateCommandPool();
     void CreateCommandBuffers();
     void CreateSyncObjects();
+    void CreateVertexBuffer();
 
     void DestroyDebugUtilsMessengerEXT(
         VkInstance instance, 
@@ -76,6 +83,7 @@ private:
     std::vector<const char*> GetRequiredInstanceExtensions();
     std::vector<char> ReadFile(const std::string &filename);
     VkShaderModule CreateShaderModule(const std::vector<char> &code);
+    uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
     GLFWwindow *m_Window;
     VkInstance m_Instance;
@@ -102,6 +110,14 @@ private:
     std::vector<VkFence> m_ImagesInFlight;
     uint32_t m_CurrentFrame = 0;
 
+    VkBuffer m_VertexBuffer;
+    VkDeviceMemory m_BufferMemory;
+
+    const std::vector<Vertex> vertices = {
+        {{ 0.0f,-0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ 0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+        {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}
+    };
 
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};

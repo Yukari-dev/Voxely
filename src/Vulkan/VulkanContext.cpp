@@ -12,6 +12,7 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     CreateGraphicsPipeline();
     CreateFramebuffers();
     CreateCommandPool();
+    CreateVertexBuffer();
     CreateCommandBuffers();
     CreateSyncObjects();
 }
@@ -27,6 +28,7 @@ VulkanContext::~VulkanContext(){
             nullptr
         );
     }
+    
 
     for(uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
         vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
@@ -50,6 +52,12 @@ VulkanContext::~VulkanContext(){
     
     if(m_SwapChain)
         vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
+    
+    if(m_VertexBuffer)
+        vkDestroyBuffer(m_Device, m_VertexBuffer, nullptr);
+    
+    if(m_BufferMemory)
+        vkFreeMemory(m_Device, m_BufferMemory, nullptr);
 
     if(m_RenderPass)
         vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
