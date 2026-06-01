@@ -13,13 +13,12 @@ add_executable(Voxely
     src/Window.cpp
     src/Vulkan/VulkanContext.cpp
     src/Vulkan/VulkanInstance.cpp
-    src/Vulkan/VulkanDebug.cpp
     src/Vulkan/VulkanDevice.cpp
-    src/Vulkan/VulkanRendering.cpp
-    src/Vulkan/VulkanSurface.cpp
     src/Vulkan/VulkanPipeline.cpp
-    src/Core/Paths.hpp
     src/Core/Paths.cpp
+    src/Vulkan/VulkanSwapchain.cpp
+    src/Vulkan/VulkanCommands.cpp
+    src/Vulkan/VulkanSync.cpp
 )
 
 target_link_libraries(
