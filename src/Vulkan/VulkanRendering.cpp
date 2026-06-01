@@ -305,7 +305,7 @@ void VulkanContext::CreateCommandPool(){
 
     if(vkCreateCommandPool(
         m_Device, &createInfo, nullptr, &m_CommandPool
-    )){
+    ) != VK_SUCCESS){
         throw std::runtime_error("Failed to Create Command Pool.");
     }
 
@@ -403,3 +403,34 @@ void VulkanContext::CreateCommandBuffers(){
     }
 
 }
+
+void VulkanContext::CreateSyncObjects(){
+    VkSemaphoreCreateInfo semaphoreInfo{};
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+    VkFenceCreateInfo fenceInfo{};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    if(vkCreateSemaphore(
+        m_Device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphore
+    ) != VK_SUCCESS){
+        throw std::runtime_error("Failed to Create the first Semaphore");
+    }
+
+    if(vkCreateSemaphore(
+        m_Device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphore
+    ) != VK_SUCCESS){
+        throw std::runtime_error("Failed to Create the second Semaphore");
+    }
+
+    if(vkCreateFence(
+        m_Device, &fenceInfo, nullptr, &m_InFlightFence
+    ) != VK_SUCCESS){
+        throw std::runtime_error("Failed to Create Fence");
+    }
+
+    std::cout << "Sync Objects Created.\n";
+}
+
+

@@ -45,6 +45,7 @@ private:
     void CreateFramebuffers();
     void CreateCommandPool();
     void CreateCommandBuffers();
+    void CreateSyncObjects();
 
     void DestroyDebugUtilsMessengerEXT(
         VkInstance instance, 
@@ -91,6 +92,9 @@ private:
     std::vector<VkFramebuffer> m_SwapChainFramebuffers;
     VkCommandPool m_CommandPool;
     std::vector<VkCommandBuffer> m_CommandBuffers;
+    VkSemaphore m_ImageAvailableSemaphore{};
+    VkSemaphore m_RenderFinishedSemaphore{};
+    VkFence m_InFlightFence{};
 
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};

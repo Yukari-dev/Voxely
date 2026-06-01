@@ -13,9 +13,16 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
     CreateFramebuffers();
     CreateCommandPool();
     CreateCommandBuffers();
+    CreateSyncObjects();
 }
 
 VulkanContext::~VulkanContext(){
+    vkDestroyFence(m_Device, m_InFlightFence, nullptr);
+
+    vkDestroySemaphore(m_Device, m_RenderFinishedSemaphore, nullptr);
+
+    vkDestroySemaphore(m_Device, m_ImageAvailableSemaphore, nullptr);
+
     if(m_PipelineLayout)
         vkDestroyPipelineLayout(m_Device, m_PipelineLayout, nullptr);
 
