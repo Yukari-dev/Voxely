@@ -8,6 +8,7 @@ int main(void){
 
     while(!window.ShouldClose()){
         window.PollEvents();
+        vulkanContext.DrawFrame();
     }
     return 0;
 }

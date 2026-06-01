@@ -17,11 +17,21 @@ VulkanContext::VulkanContext(GLFWwindow *window) : m_Window(window){
 }
 
 VulkanContext::~VulkanContext(){
-    vkDestroyFence(m_Device, m_InFlightFence, nullptr);
+    vkDeviceWaitIdle(m_Device);
 
-    vkDestroySemaphore(m_Device, m_RenderFinishedSemaphore, nullptr);
+    for(auto semaphore : m_RenderFinishedSemaphores)
+    {
+        vkDestroySemaphore(
+            m_Device,
+            semaphore,
+            nullptr
+        );
+    }
 
-    vkDestroySemaphore(m_Device, m_ImageAvailableSemaphore, nullptr);
+    for(uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
+        vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
+        vkDestroyFence(m_Device,m_InFlightFences[i],nullptr);
+    }
 
     if(m_PipelineLayout)
         vkDestroyPipelineLayout(m_Device, m_PipelineLayout, nullptr);
@@ -29,12 +39,11 @@ VulkanContext::~VulkanContext(){
     if(m_GraphicsPipeline)
         vkDestroyPipeline(m_Device, m_GraphicsPipeline, nullptr);
 
-    for(auto view : m_SwapChainImageViews)
-        vkDestroyImageView(m_Device, view, nullptr);
-    
     for(auto framebuffer : m_SwapChainFramebuffers)
         vkDestroyFramebuffer(m_Device, framebuffer, nullptr);
-    
+
+    for(auto view : m_SwapChainImageViews)
+        vkDestroyImageView(m_Device, view, nullptr);
     
     if(m_CommandPool)
         vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);

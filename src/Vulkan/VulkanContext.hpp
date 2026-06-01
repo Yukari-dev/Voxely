@@ -29,6 +29,9 @@ class VulkanContext{
 public:
     VulkanContext(GLFWwindow *window);
     ~VulkanContext();
+    
+    void DrawFrame();
+
 private:
     void CreateInstance();
     bool CheckValidationLayers();
@@ -92,9 +95,13 @@ private:
     std::vector<VkFramebuffer> m_SwapChainFramebuffers;
     VkCommandPool m_CommandPool;
     std::vector<VkCommandBuffer> m_CommandBuffers;
-    VkSemaphore m_ImageAvailableSemaphore{};
-    VkSemaphore m_RenderFinishedSemaphore{};
-    VkFence m_InFlightFence{};
+    const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+    std::vector<VkSemaphore> m_ImageAvailableSemaphores;
+    std::vector<VkSemaphore> m_RenderFinishedSemaphores;
+    std::vector<VkFence> m_InFlightFences;
+    std::vector<VkFence> m_ImagesInFlight;
+    uint32_t m_CurrentFrame = 0;
+
 
 
     VkDebugUtilsMessengerEXT m_DebugMessenger{};
