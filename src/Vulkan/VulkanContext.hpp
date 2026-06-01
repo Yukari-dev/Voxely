@@ -1,7 +1,9 @@
 #pragma once
 
+#include <vulkan/vulkan.h>
 #include <memory>
 #include <GLFW/glfw3.h>
+#include "../Renderer/VertexBuffer.hpp"
 
 class VulkanInstance;
 class VulkanDevice;
@@ -18,6 +20,9 @@ public:
     ~VulkanContext();
 
     void DrawFrame();
+    VkDevice GetDevice() const;
+    VkPhysicalDevice GetPhysicalDevice() const;
+    void RecordCommands(const VertexBuffer& mesh);
 
 private:
     GLFWwindow* m_Window;

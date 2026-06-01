@@ -35,8 +35,10 @@ VulkanCommands::VulkanCommands(
     CreateCommandBuffers();
 }
 
-VulkanCommands::~VulkanCommands()
-{
+VulkanCommands::~VulkanCommands(){
+    for (auto framebuffer : m_Framebuffers) {
+        vkDestroyFramebuffer(m_Device, framebuffer, nullptr);
+    }
     if (m_CommandPool)
     {
         vkDestroyCommandPool(
@@ -154,121 +156,66 @@ void VulkanCommands::CreateCommandPool()
 
 void VulkanCommands::CreateCommandBuffers()
 {
-    m_CommandBuffers.resize(
-        m_Framebuffers.size()
-    );
+    m_CommandBuffers.resize(m_Framebuffers.size());
 
     VkCommandBufferAllocateInfo allocInfo{};
-    allocInfo.sType =
-        VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool = m_CommandPool;
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandBufferCount = static_cast<uint32_t>(m_CommandBuffers.size());
 
-    allocInfo.commandPool =
-        m_CommandPool;
-
-    allocInfo.level =
-        VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-
-    allocInfo.commandBufferCount =
-        static_cast<uint32_t>(
-            m_CommandBuffers.size()
-        );
-
-    if(vkAllocateCommandBuffers(
-        m_Device,
-        &allocInfo,
-        m_CommandBuffers.data()
-    ) != VK_SUCCESS){
-        throw std::runtime_error(
-            "Failed to allocate command buffers."
-        );
-    }
-
-    for(size_t i = 0; i < m_CommandBuffers.size(); i++){
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType =
-            VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-        vkBeginCommandBuffer(
-            m_CommandBuffers[i],
-            &beginInfo
-        );
-
-        VkClearValue clearColor{};
-        clearColor.color =
-        {
-            {0.05f,0.08f,0.15f,1.0f}
-        };
-
-        VkRenderPassBeginInfo renderInfo{};
-        renderInfo.sType =
-            VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-
-        renderInfo.renderPass =
-            m_RenderPass;
-
-        renderInfo.framebuffer =
-            m_Framebuffers[i];
-
-        renderInfo.renderArea.offset =
-            {0,0};
-
-        renderInfo.renderArea.extent =
-            m_Extent;
-
-        renderInfo.clearValueCount = 1;
-        renderInfo.pClearValues =
-            &clearColor;
-
-        vkCmdBeginRenderPass(
-            m_CommandBuffers[i],
-            &renderInfo,
-            VK_SUBPASS_CONTENTS_INLINE
-        );
-
-        vkCmdBindPipeline(
-            m_CommandBuffers[i],
-            VK_PIPELINE_BIND_POINT_GRAPHICS,
-            m_GraphicsPipeline
-        );
-
-        VkViewport viewport{};
-        viewport.width =
-            (float)m_Extent.width;
-
-        viewport.height =
-            (float)m_Extent.height;
-
-        viewport.maxDepth = 1.0f;
-
-        vkCmdSetViewport(
-            m_CommandBuffers[i],
-            0,
-            1,
-            &viewport
-        );
-
-        VkRect2D scissor{};
-        scissor.extent = m_Extent;
-
-        vkCmdSetScissor(
-            m_CommandBuffers[i],
-            0, 1, &scissor
-        );
-
-        vkCmdDraw(
-            m_CommandBuffers[i],
-            3, 1, 0, 0
-        );
-
-        vkCmdEndRenderPass(
-            m_CommandBuffers[i]
-        );
-
-        vkEndCommandBuffer(
-            m_CommandBuffers[i]
-        );
+    if(vkAllocateCommandBuffers(m_Device, &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS){
+        throw std::runtime_error("Failed to allocate command buffers.");
     }
 }
 
+void VulkanCommands::Record(const VertexBuffer& mesh)
+{
+    for(size_t i = 0; i < m_CommandBuffers.size(); i++){
+        VkCommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
+        vkBeginCommandBuffer(m_CommandBuffers[i], &beginInfo);
+
+        VkClearValue clearColor{};
+        clearColor.color = {{0.05f, 0.08f, 0.15f, 1.0f}};
+
+        VkRenderPassBeginInfo renderInfo{};
+        renderInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderInfo.renderPass = m_RenderPass;
+        renderInfo.framebuffer = m_Framebuffers[i];
+        renderInfo.renderArea.offset = {0, 0};
+        renderInfo.renderArea.extent = m_Extent;
+        renderInfo.clearValueCount = 1;
+        renderInfo.pClearValues = &clearColor;
+
+        vkCmdBeginRenderPass(m_CommandBuffers[i], &renderInfo, VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBindPipeline(m_CommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
+
+        VkViewport viewport{};
+        viewport.width = (float)m_Extent.width;
+        viewport.height = (float)m_Extent.height;
+        viewport.maxDepth = 1.0f;
+        vkCmdSetViewport(m_CommandBuffers[i], 0, 1, &viewport);
+
+        VkRect2D scissor{};
+        scissor.extent = m_Extent;
+        vkCmdSetScissor(m_CommandBuffers[i], 0, 1, &scissor);
+
+        // INSTEAD of vkCmdDraw, call your DrawMesh helper function!
+        DrawMesh(m_CommandBuffers[i], mesh);
+
+        vkCmdEndRenderPass(m_CommandBuffers[i]);
+        vkEndCommandBuffer(m_CommandBuffers[i]);
+    }
+}
+
+void VulkanCommands::DrawMesh(VkCommandBuffer cmd, const VertexBuffer &mesh){
+    VkBuffer vertexBuffers[] = { mesh.GetBuffer() };
+    VkDeviceSize offsets[] = {0};
+
+    vkCmdBindVertexBuffers(cmd, 0, 1, vertexBuffers, offsets);
+
+    vkCmdDraw(cmd, mesh.GetVertexCount(), 1, 0, 0);
+}
 

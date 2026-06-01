@@ -55,3 +55,10 @@ VulkanContext::~VulkanContext(){
 void VulkanContext::DrawFrame(){
     m_Sync->DrawFrame();
 }
+
+void VulkanContext::RecordCommands(const VertexBuffer& mesh) {
+    m_Commands->Record(mesh);
+}
+
+VkDevice VulkanContext::GetDevice() const { return m_Device->GetDevice(); }
+VkPhysicalDevice VulkanContext::GetPhysicalDevice() const { return m_Device->GetPhysicalDevice(); }

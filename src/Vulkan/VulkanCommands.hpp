@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.h>
 #include <vector>
+#include "../Renderer/VertexBuffer.hpp"
 
 class VulkanDevice;
 class VulkanSwapchain;
@@ -17,6 +18,9 @@ public:
     );
 
     ~VulkanCommands();
+    void Record(const VertexBuffer& mesh);
+
+    void DrawMesh(VkCommandBuffer cmd, const VertexBuffer &mesh);
 
     VkCommandPool GetCommandPool() const
     {
