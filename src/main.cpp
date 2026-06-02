@@ -3,6 +3,7 @@
 #include <vector>
 #include "Renderer/Vertex.hpp"
 #include "Renderer/VertexBuffer.hpp"
+#include "Renderer/IndexBuffer.hpp"
 #include "Renderer/Renderer.hpp"
 
 int main(void){
@@ -12,13 +13,20 @@ int main(void){
     Renderer renderer(context);
 
     std::vector<Vertex> vertices = {
-        {{ 0.0f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-        {{ 0.5f,  0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, 
-        {{-0.5f,  0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}
+        {{ 0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, // 0
+        {{ 0.5f,  0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, // 1
+        {{-0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}, // 2
+        {{-0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}}, // 3
+    };
+
+    std::vector<uint32_t> indices = {
+        0, 1, 2,
+        3, 0, 2
     };
 
     VertexBuffer triangleBuffer(context.GetDevice(), context.GetPhysicalDevice(), vertices);
-    renderer.Submit(triangleBuffer);
+    IndexBuffer triangleIndices(context.GetDevice(), context.GetPhysicalDevice(), indices);
+    renderer.Submit(triangleBuffer, triangleIndices);
 
     while(!window.ShouldClose()){
         window.PollEvents();

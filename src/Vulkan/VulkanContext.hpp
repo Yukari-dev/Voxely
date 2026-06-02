@@ -4,6 +4,7 @@
 #include <memory>
 #include <GLFW/glfw3.h>
 #include "../Renderer/VertexBuffer.hpp"
+#include "../Renderer/IndexBuffer.hpp"
 
 class VulkanInstance;
 class VulkanDevice;
@@ -22,7 +23,7 @@ public:
     void DrawFrame();
     VkDevice GetDevice() const;
     VkPhysicalDevice GetPhysicalDevice() const;
-    void RecordCommands(const VertexBuffer& mesh);
+    void RecordCommands(const VertexBuffer& vertexBuffer, const IndexBuffer &indexBuffer);
 
 private:
     GLFWwindow* m_Window;

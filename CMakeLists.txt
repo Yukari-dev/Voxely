@@ -20,6 +20,7 @@ add_executable(Voxely
     src/Vulkan/VulkanCommands.cpp
     src/Vulkan/VulkanSync.cpp
     src/Renderer/Renderer.cpp
+    src/Renderer/IndexBuffer.cpp
 )
 
 target_link_libraries(

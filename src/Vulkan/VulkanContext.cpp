@@ -56,9 +56,8 @@ void VulkanContext::DrawFrame(){
     m_Sync->DrawFrame();
 }
 
-void VulkanContext::RecordCommands(const VertexBuffer& mesh) {
-    std::cout << "Recording!\n";
-    m_Commands->Record(mesh);
+void VulkanContext::RecordCommands(const VertexBuffer& vertexBuffer, const IndexBuffer &indexBuffer) {
+    m_Commands->Record(vertexBuffer, indexBuffer);
 }
 
 VkDevice VulkanContext::GetDevice() const { return m_Device->GetDevice(); }

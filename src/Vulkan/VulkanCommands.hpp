@@ -3,6 +3,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include "../Renderer/VertexBuffer.hpp"
+#include "../Renderer/IndexBuffer.hpp"
 
 class VulkanDevice;
 class VulkanSwapchain;
@@ -18,18 +19,16 @@ public:
     );
 
     ~VulkanCommands();
-    void Record(const VertexBuffer& mesh);
+    void Record(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer);
 
-    void DrawMesh(VkCommandBuffer cmd, const VertexBuffer &mesh);
+    void DrawMesh(VkCommandBuffer cmd, const VertexBuffer &vertexBuffer, const IndexBuffer &indexBuffer);
 
-    VkCommandPool GetCommandPool() const
-    {
+    VkCommandPool GetCommandPool() const{
         return m_CommandPool;
     }
 
     const std::vector<VkCommandBuffer>&
-    GetCommandBuffers() const
-    {
+    GetCommandBuffers() const{
         return m_CommandBuffers;
     }
 

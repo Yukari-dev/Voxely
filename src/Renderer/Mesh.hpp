@@ -3,10 +3,10 @@
 
 class Mesh{
 public:
-    Mesh(VertexBuffer& vertexBuffer, uint32_t vertexCount);
+    Mesh(IndexBuffer& vertexBuffer, uint32_t vertexCount);
 
-    VertexBuffer GetVertexBuffer() { return m_VertexBuffer; }
+    IndexBuffer GetVertexBuffer() { return m_VertexBuffer; }
 private:
-    VertexBuffer m_VertexBuffer;
+    IndexBuffer m_VertexBuffer;
     uint32_t m_VertexCount;
 };

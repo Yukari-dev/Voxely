@@ -2,12 +2,13 @@
 #include <vulkan/vulkan.h>
 #include "../Vulkan/VulkanContext.hpp"
 #include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
 #include <vector>
 
 class Renderer{
 public:
     Renderer(VulkanContext &vulkanContext);
-    void Submit(VertexBuffer &buffer);
+    void Submit(VertexBuffer &vertexBuffer, IndexBuffer &indexBuffer);
 
     void Render();
 private:

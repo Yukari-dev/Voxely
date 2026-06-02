@@ -169,7 +169,7 @@ void VulkanCommands::CreateCommandBuffers()
     }
 }
 
-void VulkanCommands::Record(const VertexBuffer& mesh)
+void VulkanCommands::Record(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer)
 {
     for(size_t i = 0; i < m_CommandBuffers.size(); i++){
         VkCommandBufferBeginInfo beginInfo{};
@@ -202,19 +202,20 @@ void VulkanCommands::Record(const VertexBuffer& mesh)
         scissor.extent = m_Extent;
         vkCmdSetScissor(m_CommandBuffers[i], 0, 1, &scissor);
 
-        DrawMesh(m_CommandBuffers[i], mesh);
+        DrawMesh(m_CommandBuffers[i], vertexBuffer, indexBuffer);
 
         vkCmdEndRenderPass(m_CommandBuffers[i]);
         vkEndCommandBuffer(m_CommandBuffers[i]);
     }
 }
 
-void VulkanCommands::DrawMesh(VkCommandBuffer cmd, const VertexBuffer &mesh){
-    VkBuffer vertexBuffers[] = { mesh.GetBuffer() };
+void VulkanCommands::DrawMesh(VkCommandBuffer cmd, const VertexBuffer &vertexBuffer, const IndexBuffer &indexBuffer){
+    VkBuffer vertexBuffers[] = { vertexBuffer.GetBuffer() };
     VkDeviceSize offsets[] = {0};
 
     vkCmdBindVertexBuffers(cmd, 0, 1, vertexBuffers, offsets);
+    vkCmdBindIndexBuffer(cmd, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-    vkCmdDraw(cmd, mesh.GetVertexCount(), 1, 0, 0);
+    vkCmdDrawIndexed(cmd, indexBuffer.GetIndexCount(), 1, 0, 0, 0);
 }
 
