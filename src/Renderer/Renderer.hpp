@@ -12,16 +12,16 @@ class Renderer {
 public:
     Renderer(VulkanContext& context);
 
-    // retained API
+    RenderObject& Add(Mesh& mesh, Transform transform = {});
     RenderObject& Add(VertexBuffer& vb, IndexBuffer& ib, Transform transform = {});
     void Remove(RenderObject* obj);
     void Clear();
 
-    void InitDescriptors();
-    void BuildCommands();
     void UpdateCamera(float aspectRatio, glm::vec3 eye, glm::vec3 target);
 
 private:
+    void InitDescriptors();
+    void BuildCommands();
     VulkanContext&      m_Context;
     UniformBuffer&      m_UniformBuffer;
     VulkanDescriptors&  m_Descriptors;

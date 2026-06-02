@@ -1,30 +1,31 @@
 #pragma once
-#include "VertexBuffer.hpp"
-#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
 #include <memory>
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
+#include "Vertex.hpp"
+#include <vector>
+#include "Transform.hpp"
 
-struct Transform{
-    glm::vec3 position = glm::vec3(0.0f);
-    glm::vec3 rotation = glm::vec3(0.0f);
-    glm::vec3 scale    = glm::vec3(1.0f);
+struct RenderObject {
+    VertexBuffer* vertexBuffer;
+    IndexBuffer*  indexBuffer;
+    Transform     transform;
+};
 
-    glm::mat4 GetMatrix() const {
-        glm::mat4 m = glm::mat4(1.0f);
-        m = glm::translate(m, position);
-        m = glm::rotate(m, glm::radians(rotation.x), {1,0,0});
-        m = glm::rotate(m, glm::radians(rotation.y), {0,1,0});
-        m = glm::rotate(m, glm::radians(rotation.z), {0,0,1});
-        m = glm::scale(m, scale);
-        return m;
+class Mesh {
+public:
+    Mesh(VkDevice device, VkPhysicalDevice physicalDevice,
+         const std::vector<Vertex>& vertices,
+         const std::vector<uint32_t>& indices)
+    {
+        m_VertexBuffer = std::make_unique<VertexBuffer>(device, physicalDevice, vertices);
+        m_IndexBuffer  = std::make_unique<IndexBuffer>(device, physicalDevice, indices);
     }
-};
 
-struct RenderObject{
-    VertexBuffer *vertexBuffer;
-    IndexBuffer *indexBuffer;
-    Transform transform;
-};
+    VertexBuffer& GetVertexBuffer() const { return *m_VertexBuffer; }
+    IndexBuffer&  GetIndexBuffer()  const { return *m_IndexBuffer;  }
 
+private:
+    std::unique_ptr<VertexBuffer> m_VertexBuffer;
+    std::unique_ptr<IndexBuffer>  m_IndexBuffer;
+};

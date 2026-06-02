@@ -9,8 +9,17 @@ Renderer::Renderer(VulkanContext& context)
     , m_Descriptors(context.GetDescriptors())
 {}
 
+RenderObject& Renderer::Add(Mesh& mesh, Transform transform) {
+    m_Objects.push_back({ &mesh.GetVertexBuffer(), &mesh.GetIndexBuffer(), transform });
+    InitDescriptors();
+    BuildCommands();
+    return m_Objects.back();
+}
+
 RenderObject& Renderer::Add(VertexBuffer& vb, IndexBuffer& ib, Transform transform) {
     m_Objects.push_back({ &vb, &ib, transform });
+    InitDescriptors();
+    BuildCommands();
     return m_Objects.back();
 }
 
@@ -34,7 +43,6 @@ void Renderer::InitDescriptors() {
 
 void Renderer::BuildCommands() {
     if (m_Objects.empty()) return;
-    // for now draw the first object — multi-object comes with push constants
     for(auto& obj : m_Objects){
         m_Context.RecordCommands(*obj.vertexBuffer, *obj.indexBuffer);
     }
