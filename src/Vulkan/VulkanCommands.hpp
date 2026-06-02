@@ -8,6 +8,7 @@
 class VulkanDevice;
 class VulkanSwapchain;
 class VulkanPipeline;
+class VulkanDescriptors;
 
 class VulkanCommands
 {
@@ -15,7 +16,8 @@ public:
     VulkanCommands(
         const VulkanDevice& device,
         const VulkanSwapchain& swapchain,
-        const VulkanPipeline& pipeline
+        const VulkanPipeline& pipeline,
+        const VulkanDescriptors& descriptors
     );
 
     ~VulkanCommands();
@@ -49,12 +51,12 @@ private:
 
     std::vector<VkImageView> m_ImageViews;
 
-    VkCommandPool m_CommandPool =
-        VK_NULL_HANDLE;
+    VkCommandPool m_CommandPool =VK_NULL_HANDLE;
+    std::vector<VkFramebuffer> m_Framebuffers;
+    std::vector<VkCommandBuffer> m_CommandBuffers;
 
-    std::vector<VkFramebuffer>
-        m_Framebuffers;
+    VkDescriptorSetLayout m_DescriptorLayout{};
+    VkDescriptorSet m_DescriptorSet{};
+    VkPipelineLayout m_PipelineLayout;
 
-    std::vector<VkCommandBuffer>
-        m_CommandBuffers;
 };

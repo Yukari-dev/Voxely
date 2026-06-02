@@ -13,6 +13,8 @@ class VulkanPipeline;
 class VulkanCommands;
 class VulkanSync;
 class VulkanBuffer;
+class VulkanDescriptors;
+class UniformBuffer;
 
 class VulkanContext
 {
@@ -23,6 +25,8 @@ public:
     void DrawFrame();
     VkDevice GetDevice() const;
     VkPhysicalDevice GetPhysicalDevice() const;
+    UniformBuffer& GetUniformBuffer() const;
+    VulkanDescriptors& GetDescriptors() const;
     void RecordCommands(const VertexBuffer& vertexBuffer, const IndexBuffer &indexBuffer);
 
 private:
@@ -34,4 +38,6 @@ private:
     std::unique_ptr<VulkanPipeline> m_Pipeline;
     std::unique_ptr<VulkanCommands> m_Commands;
     std::unique_ptr<VulkanSync> m_Sync;
+    std::unique_ptr<VulkanDescriptors> m_Descriptors;
+    std::unique_ptr<UniformBuffer> m_UniformBuffer;
 };

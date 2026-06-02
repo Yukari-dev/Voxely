@@ -9,16 +9,10 @@
 #include "../Core/Paths.hpp"
 #include "../Graphics/Vertex.hpp"
 
-VulkanPipeline::VulkanPipeline(
-    const VulkanDevice &device,
-    const VulkanSwapchain &swapchain)
-{
-    m_Device =
-        device.GetDevice();
-
-    m_SwapchainFormat =
-        swapchain.GetImageFormat();
-
+VulkanPipeline::VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain& swapchain, VkDescriptorSetLayout descriptorLayout) {
+    m_Device = device.GetDevice();
+    m_SwapchainFormat = swapchain.GetImageFormat();
+    m_DescriptorLayout = descriptorLayout;
     CreateRenderPass();
     CreateGraphicsPipeline();
 }
@@ -33,9 +27,6 @@ VulkanPipeline::~VulkanPipeline()
 
     if (m_RenderPass)
         vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
-
-    if(m_DescriptorLayout)
-        vkDestroyDescriptorSetLayout(m_Device, m_DescriptorLayout, nullptr);
 }
 
 std::vector<char>
@@ -238,7 +229,7 @@ void VulkanPipeline::CreateGraphicsPipeline()
 
     std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
     attributeDescriptions[0].location = 0;
-    attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+    attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
     attributeDescriptions[0].offset = offsetof(Vertex, position);
 
     attributeDescriptions[1].location = 1;
@@ -256,18 +247,6 @@ void VulkanPipeline::CreateGraphicsPipeline()
     mvpLayoutBinding.descriptorCount = 1;
     mvpLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
-    VkDescriptorSetLayoutCreateInfo descriptorLayoutInfo{};
-    descriptorLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    descriptorLayoutInfo.bindingCount = 1;
-    descriptorLayoutInfo.pBindings = &mvpLayoutBinding;
-
-    if(vkCreateDescriptorSetLayout(
-        m_Device, &descriptorLayoutInfo, nullptr, &m_DescriptorLayout
-    )){
-        throw std::runtime_error("Failed to create MVP Descriptor Set Layout.");
-    }
-
-
     VkPipelineInputAssemblyStateCreateInfo assembly{};
     assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     assembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -281,8 +260,8 @@ void VulkanPipeline::CreateGraphicsPipeline()
     rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
     rasterizer.lineWidth = 1.0f;
-    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+    rasterizer.cullMode = VK_CULL_MODE_NONE;
+    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 
     VkPipelineMultisampleStateCreateInfo multisampling{};
     multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -357,4 +336,8 @@ void VulkanPipeline::CreateGraphicsPipeline()
         fragModule,
         nullptr
     );
+}
+
+void VulkanPipeline::SetDescriptorLayout(VkDescriptorSetLayout layout) {
+    m_DescriptorLayout = layout;
 }

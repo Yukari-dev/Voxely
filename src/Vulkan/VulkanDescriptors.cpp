@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 
-VulkanDescriptors::VulkanDescriptors(VkDevice device) : m_Device(device){
+VulkanDescriptors::VulkanDescriptors(VulkanDevice& device) : m_Device(device.GetDevice()){
     CreateUniformLayout();
     CreatePool();
     AllocateSet();

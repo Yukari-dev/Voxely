@@ -7,7 +7,9 @@
 #include "Renderer/Renderer.hpp"
 
 int main(void){
-    Window window(1280, 720, "Voxely");
+    float width = 1280.0f;
+    float height = 720.0f;
+    Window window(int(width), int(height), "Voxely");
     VulkanContext context(window.GetNativeWindow());
 
     Renderer renderer(context);
@@ -27,9 +29,12 @@ int main(void){
     VertexBuffer triangleBuffer(context.GetDevice(), context.GetPhysicalDevice(), vertices);
     IndexBuffer triangleIndices(context.GetDevice(), context.GetPhysicalDevice(), indices);
     renderer.Submit(triangleBuffer, triangleIndices);
+    renderer.InitDescriptor();
+    context.RecordCommands(triangleBuffer, triangleIndices);
 
     while(!window.ShouldClose()){
         window.PollEvents();
+        renderer.UpdateUBO(width/height);
         context.DrawFrame();
     }
     vkDeviceWaitIdle(context.GetDevice());

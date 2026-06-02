@@ -3,32 +3,25 @@
 #include "VulkanDevice.hpp"
 #include "VulkanSwapchain.hpp"
 #include "VulkanPipeline.hpp"
+#include "VulkanDescriptors.hpp"
 
 #include <stdexcept>
 
 VulkanCommands::VulkanCommands(
     const VulkanDevice& device,
     const VulkanSwapchain& swapchain,
-    const VulkanPipeline& pipeline
-)
-{
-    m_Device =
-        device.GetDevice();
-
-    m_PhysicalDevice =
-        device.GetPhysicalDevice();
-
-    m_Extent =
-        swapchain.GetExtent();
-
-    m_ImageViews =
-        swapchain.GetImageViews();
-
-    m_RenderPass =
-        pipeline.GetRenderPass();
-
-    m_GraphicsPipeline =
-        pipeline.GetPipeline();
+    const VulkanPipeline& pipeline,
+    const VulkanDescriptors& descriptors
+){
+    m_Device = device.GetDevice();
+    m_PhysicalDevice = device.GetPhysicalDevice();
+    m_Extent = swapchain.GetExtent();
+    m_ImageViews = swapchain.GetImageViews();
+    m_RenderPass = pipeline.GetRenderPass();
+    m_GraphicsPipeline = pipeline.GetPipeline();
+    m_DescriptorLayout = descriptors.GetLayout();
+    m_DescriptorSet = descriptors.GetSet();
+    m_PipelineLayout = pipeline.GetPipelineLayout();
 
     CreateFramebuffers();
     CreateCommandPool();
@@ -48,7 +41,6 @@ VulkanCommands::~VulkanCommands(){
         );
     }
 }
-
 
 void VulkanCommands::CreateFramebuffers()
 {
@@ -191,6 +183,11 @@ void VulkanCommands::Record(const VertexBuffer& vertexBuffer, const IndexBuffer&
 
         vkCmdBeginRenderPass(m_CommandBuffers[i], &renderInfo, VK_SUBPASS_CONTENTS_INLINE);
         vkCmdBindPipeline(m_CommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
+
+        vkCmdBindDescriptorSets(
+            m_CommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, 
+            m_PipelineLayout, 0, 1, &m_DescriptorSet, 0, nullptr
+        );
 
         VkViewport viewport{};
         viewport.width = (float)m_Extent.width;

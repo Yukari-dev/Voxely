@@ -10,11 +10,7 @@ class VulkanSwapchain;
 class VulkanPipeline
 {
 public:
-    VulkanPipeline(
-        const VulkanDevice& device,
-        const VulkanSwapchain& swapchain
-    );
-
+    VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain& swapchain, VkDescriptorSetLayout descriptorLayout);
     ~VulkanPipeline();
 
     VkRenderPass GetRenderPass() const{
@@ -28,6 +24,8 @@ public:
     VkPipeline GetPipeline() const{
         return m_GraphicsPipeline;
     }
+
+    void SetDescriptorLayout(VkDescriptorSetLayout layout);
 
 private:
     void CreateRenderPass();

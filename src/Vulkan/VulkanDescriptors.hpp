@@ -1,10 +1,11 @@
 #pragma once
 #include <vulkan/vulkan.h>
+#include "../Vulkan/VulkanDevice.hpp"
 
 
 class VulkanDescriptors{
 public:
-    VulkanDescriptors(VkDevice device);
+    VulkanDescriptors(VulkanDevice& device);
     ~VulkanDescriptors();
 
     void CreateUniformLayout();
