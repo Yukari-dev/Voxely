@@ -57,6 +57,7 @@ void VulkanContext::DrawFrame(){
 }
 
 void VulkanContext::RecordCommands(const VertexBuffer& mesh) {
+    std::cout << "Recording!\n";
     m_Commands->Record(mesh);
 }
 

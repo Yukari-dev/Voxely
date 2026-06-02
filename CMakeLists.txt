@@ -19,6 +19,7 @@ add_executable(Voxely
     src/Vulkan/VulkanSwapchain.cpp
     src/Vulkan/VulkanCommands.cpp
     src/Vulkan/VulkanSync.cpp
+    src/Renderer/Renderer.cpp
 )
 
 target_link_libraries(

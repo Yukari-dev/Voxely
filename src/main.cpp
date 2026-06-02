@@ -3,10 +3,13 @@
 #include <vector>
 #include "Renderer/Vertex.hpp"
 #include "Renderer/VertexBuffer.hpp"
+#include "Renderer/Renderer.hpp"
 
 int main(void){
     Window window(1280, 720, "Voxely");
-    VulkanContext vulkanContext(window.GetNativeWindow());
+    VulkanContext context(window.GetNativeWindow());
+
+    Renderer renderer(context);
 
     std::vector<Vertex> vertices = {
         {{ 0.0f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
@@ -14,14 +17,13 @@ int main(void){
         {{-0.5f,  0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}
     };
 
-    VertexBuffer triangleBuffer(vulkanContext.GetDevice(), vulkanContext.GetPhysicalDevice(), vertices);
-
-    vulkanContext.RecordCommands(triangleBuffer);
+    VertexBuffer triangleBuffer(context.GetDevice(), context.GetPhysicalDevice(), vertices);
+    renderer.Submit(triangleBuffer);
 
     while(!window.ShouldClose()){
         window.PollEvents();
-        vulkanContext.DrawFrame();
+        context.DrawFrame();
     }
-    vkDeviceWaitIdle(vulkanContext.GetDevice());
+    vkDeviceWaitIdle(context.GetDevice());
     return 0;
 }

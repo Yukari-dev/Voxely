@@ -202,7 +202,6 @@ void VulkanCommands::Record(const VertexBuffer& mesh)
         scissor.extent = m_Extent;
         vkCmdSetScissor(m_CommandBuffers[i], 0, 1, &scissor);
 
-        // INSTEAD of vkCmdDraw, call your DrawMesh helper function!
         DrawMesh(m_CommandBuffers[i], mesh);
 
         vkCmdEndRenderPass(m_CommandBuffers[i]);
