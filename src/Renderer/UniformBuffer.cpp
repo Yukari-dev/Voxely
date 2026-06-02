@@ -41,6 +41,9 @@ UniformBuffer::~UniformBuffer() {
     vkFreeMemory(m_Device, m_DeviceMemory, nullptr);
 }
 
+
+VkBuffer UniformBuffer::GetBuffer() const { return m_Buffer; }
+
 void UniformBuffer::Update(const UniformBufferObject& ubo) {
     memcpy(m_Mapped, &ubo, sizeof(ubo));
 }

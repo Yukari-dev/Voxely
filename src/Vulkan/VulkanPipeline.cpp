@@ -12,7 +12,10 @@
 VulkanPipeline::VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain& swapchain, VkDescriptorSetLayout descriptorLayout) {
     m_Device = device.GetDevice();
     m_SwapchainFormat = swapchain.GetImageFormat();
+    m_DepthFormat = swapchain.GetDepthFormat();
     m_DescriptorLayout = descriptorLayout;
+    printf("swapchain format: %d\n", m_SwapchainFormat);
+    printf("depth format: %d\n", m_DepthFormat);
     CreateRenderPass();
     CreateGraphicsPipeline();
 }
@@ -93,74 +96,58 @@ VulkanPipeline::CreateShaderModule(
 void VulkanPipeline::CreateRenderPass()
 {
     VkAttachmentDescription colorAttachment{};
-    colorAttachment.format =
-        m_SwapchainFormat;
-
-    colorAttachment.samples =
-        VK_SAMPLE_COUNT_1_BIT;
-
-    colorAttachment.loadOp =
-        VK_ATTACHMENT_LOAD_OP_CLEAR;
-
-    colorAttachment.storeOp =
-        VK_ATTACHMENT_STORE_OP_STORE;
-
-    colorAttachment.stencilLoadOp =
-        VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-
-    colorAttachment.stencilStoreOp =
-        VK_ATTACHMENT_STORE_OP_DONT_CARE;
-
-    colorAttachment.initialLayout =
-        VK_IMAGE_LAYOUT_UNDEFINED;
-
-    colorAttachment.finalLayout =
-        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    colorAttachment.format = m_SwapchainFormat;
+    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
     VkAttachmentReference colorRef{};
     colorRef.attachment = 0;
+    colorRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-    colorRef.layout =
-        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    VkAttachmentDescription depthAttachment{};
+    depthAttachment.format = m_DepthFormat;
+    depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    VkSubpassDescription subpass{};
-    subpass.pipelineBindPoint =
-        VK_PIPELINE_BIND_POINT_GRAPHICS;
-
-    subpass.colorAttachmentCount = 1;
-    subpass.pColorAttachments =
-        &colorRef;
+    VkAttachmentReference depthRef{};
+    depthRef.attachment = 1;
+    depthRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
     VkSubpassDependency dependency{};
-    dependency.srcSubpass =
-        VK_SUBPASS_EXTERNAL;
-
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
     dependency.dstSubpass = 0;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-    dependency.srcStageMask =
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-
-    dependency.dstStageMask =
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-
-    dependency.dstAccessMask =
-        VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VkSubpassDescription subpass{};
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount = 1;
+    subpass.pColorAttachments = &colorRef;
+    subpass.pDepthStencilAttachment = &depthRef;
 
     VkRenderPassCreateInfo createInfo{};
-    createInfo.sType =
-        VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-
+    createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     createInfo.attachmentCount = 1;
-    createInfo.pAttachments =
-        &colorAttachment;
-
+    createInfo.pAttachments = &colorAttachment;
     createInfo.subpassCount = 1;
-    createInfo.pSubpasses =
-        &subpass;
-
+    createInfo.pSubpasses = &subpass;
     createInfo.dependencyCount = 1;
-    createInfo.pDependencies =
-        &dependency;
+    createInfo.pDependencies = &dependency;
+
+    std::array<VkAttachmentDescription, 2> attachments = { colorAttachment, depthAttachment };
+    createInfo.attachmentCount = 2;
+    createInfo.pAttachments = attachments.data();
 
     if (vkCreateRenderPass(
             m_Device,
@@ -175,52 +162,36 @@ void VulkanPipeline::CreateRenderPass()
 
 void VulkanPipeline::CreateGraphicsPipeline()
 {
-    auto vertCode = ReadFile(
-        (Paths::Shaders() / "triangle.vert.spv").string());
+    auto vertCode = ReadFile((Paths::Shaders() / "triangle.vert.spv").string());
 
-    auto fragCode = ReadFile(
-        (Paths::Shaders() / "triangle.frag.spv").string());
+    auto fragCode = ReadFile((Paths::Shaders() / "triangle.frag.spv").string());
 
-    VkShaderModule vertModule =
-        CreateShaderModule(
-            vertCode);
+    VkShaderModule vertModule = CreateShaderModule(vertCode);
 
-    VkShaderModule fragModule =
-        CreateShaderModule(
-            fragCode);
+    VkShaderModule fragModule = CreateShaderModule(fragCode);
 
     VkPipelineShaderStageCreateInfo vertStage{};
-    vertStage.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    vertStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 
-    vertStage.stage =
-        VK_SHADER_STAGE_VERTEX_BIT;
+    vertStage.stage = VK_SHADER_STAGE_VERTEX_BIT;
 
-    vertStage.module =
-        vertModule;
+    vertStage.module = vertModule;
 
     vertStage.pName = "main";
 
     VkPipelineShaderStageCreateInfo fragStage{};
-    fragStage.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    fragStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 
-    fragStage.stage =
-        VK_SHADER_STAGE_FRAGMENT_BIT;
+    fragStage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-    fragStage.module =
-        fragModule;
+    fragStage.module = fragModule;
 
     fragStage.pName = "main";
 
-    VkPipelineShaderStageCreateInfo stages[] =
-        {
-            vertStage,
-            fragStage};
+    VkPipelineShaderStageCreateInfo stages[] = {vertStage, fragStage};
 
     VkPipelineVertexInputStateCreateInfo vertexInput{};
-    vertexInput.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
     VkVertexInputBindingDescription bindingDescription{};
     bindingDescription.binding = 0;
@@ -260,8 +231,9 @@ void VulkanPipeline::CreateGraphicsPipeline()
     rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
     rasterizer.lineWidth = 1.0f;
-    rasterizer.cullMode = VK_CULL_MODE_NONE;
-    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+
+    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
 
     VkPipelineMultisampleStateCreateInfo multisampling{};
     multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -288,6 +260,15 @@ void VulkanPipeline::CreateGraphicsPipeline()
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
     dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
     dynamicState.pDynamicStates = dynamicStates.data();
+
+    VkPipelineDepthStencilStateCreateInfo depthStencil{};
+    depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    depthStencil.depthTestEnable = VK_TRUE;
+    depthStencil.depthWriteEnable = VK_TRUE;
+    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+    depthStencil.depthBoundsTestEnable = VK_FALSE;
+    depthStencil.stencilTestEnable = VK_FALSE;
+
     VkPipelineLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layoutInfo.setLayoutCount = 1;
@@ -313,6 +294,8 @@ void VulkanPipeline::CreateGraphicsPipeline()
     pipelineInfo.pDynamicState = &dynamicState;
     pipelineInfo.layout = m_PipelineLayout;
     pipelineInfo.renderPass = m_RenderPass;
+    pipelineInfo.pDepthStencilState = &depthStencil;
+
 
     if (vkCreateGraphicsPipelines(
         m_Device,

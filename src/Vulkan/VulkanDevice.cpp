@@ -274,5 +274,3 @@ bool VulkanDevice::IsDeviceSuitable(
     return indices.IsComplete() &&
            extensionsSupported;
 }
-
-

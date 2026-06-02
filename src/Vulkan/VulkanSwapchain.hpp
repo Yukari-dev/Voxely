@@ -25,34 +25,26 @@ public:
 
     ~VulkanSwapchain();
 
-    VkSwapchainKHR GetSwapchain() const
-    {
-        return m_Swapchain;
-    }
+    VkSwapchainKHR GetSwapchain() const{return m_Swapchain;}
 
-    VkFormat GetImageFormat() const
-    {
-        return m_ImageFormat;
-    }
+    VkFormat GetImageFormat() const{return m_ImageFormat;}
 
-    VkExtent2D GetExtent() const
-    {
-        return m_Extent;
-    }
+    VkExtent2D GetExtent() const{return m_Extent;}
 
-    const std::vector<VkImage>& GetImages() const
-    {
-        return m_Images;
-    }
+    const std::vector<VkImage>& GetImages() const{return m_Images;}
 
-    const std::vector<VkImageView>& GetImageViews() const
-    {
-        return m_ImageViews;
-    }
+    const std::vector<VkImageView>& GetImageViews() const{return m_ImageViews;}
+
+    VkImageView GetDepthImageView() const {return m_DepthImageView;}
+
+    VkFormat FindDepthFormat() const;
+
+    VkFormat GetDepthFormat() const {return m_DepthFormat;}
 
 private:
     void CreateSwapchain();
     void CreateImageViews();
+    void CreateDepthResources();
 
     SwapChainSupportDetails QuerySupport(
         VkPhysicalDevice device
@@ -70,6 +62,8 @@ private:
         const VkSurfaceCapabilitiesKHR& capabilities
     );
 
+    uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
 private:
     GLFWwindow* m_Window;
 
@@ -85,4 +79,9 @@ private:
 
     std::vector<VkImage> m_Images;
     std::vector<VkImageView> m_ImageViews;
+
+    VkFormat m_DepthFormat;
+    VkImage m_DepthImage;
+    VkDeviceMemory m_DepthImageMemory;
+    VkImageView m_DepthImageView;
 };

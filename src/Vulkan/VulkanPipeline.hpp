@@ -43,6 +43,8 @@ private:
     VkDevice m_Device;
 
     VkFormat m_SwapchainFormat;
+    VkFormat m_DepthFormat;
+
 
     VkRenderPass m_RenderPass = VK_NULL_HANDLE;
     VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;

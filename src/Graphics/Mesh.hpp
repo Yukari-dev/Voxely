@@ -1,12 +1,30 @@
 #pragma once
 #include "VertexBuffer.hpp"
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <memory>
+#include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
 
-class Mesh{
-public:
-    Mesh(IndexBuffer& vertexBuffer, uint32_t vertexCount);
+struct Transform{
+    glm::vec3 position = glm::vec3(0.0f);
+    glm::vec3 rotation = glm::vec3(0.0f);
+    glm::vec3 scale    = glm::vec3(1.0f);
 
-    IndexBuffer GetVertexBuffer() { return m_VertexBuffer; }
-private:
-    IndexBuffer m_VertexBuffer;
-    uint32_t m_VertexCount;
+    glm::mat4 GetMatrix() const {
+        glm::mat4 m = glm::mat4(1.0f);
+        m = glm::translate(m, position);
+        m = glm::rotate(m, glm::radians(rotation.x), {1,0,0});
+        m = glm::rotate(m, glm::radians(rotation.y), {0,1,0});
+        m = glm::rotate(m, glm::radians(rotation.z), {0,0,1});
+        m = glm::scale(m, scale);
+        return m;
+    }
 };
+
+struct RenderObject{
+    VertexBuffer *vertexBuffer;
+    IndexBuffer *indexBuffer;
+    Transform transform;
+};
+

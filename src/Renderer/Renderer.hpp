@@ -1,26 +1,30 @@
 #pragma once
 #include <vulkan/vulkan.h>
+#include <vector>
 #include "../Vulkan/VulkanContext.hpp"
 #include "../Graphics/VertexBuffer.hpp"
 #include "../Graphics/IndexBuffer.hpp"
-#include <vector>
+#include "../Graphics/Mesh.hpp"
 #include "UniformBuffer.hpp"
 #include "../Vulkan/VulkanDescriptors.hpp"
 
-class Renderer{
+class Renderer {
 public:
-    Renderer(VulkanContext &vulkanContext);
-    void Submit(VertexBuffer &vertexBuffer, IndexBuffer &indexBuffer);
+    Renderer(VulkanContext& context);
 
-    void Render();
+    // retained API
+    RenderObject& Add(VertexBuffer& vb, IndexBuffer& ib, Transform transform = {});
+    void Remove(RenderObject* obj);
+    void Clear();
 
-    void InitDescriptor();
-    void UpdateUBO(float aspectRatio);
+    void InitDescriptors();
+    void BuildCommands();
+    void UpdateCamera(float aspectRatio, glm::vec3 eye, glm::vec3 target);
+
 private:
-    VulkanContext &m_Context;
-    std::vector<VertexBuffer*> m_DrawQueue;
+    VulkanContext&      m_Context;
+    UniformBuffer&      m_UniformBuffer;
+    VulkanDescriptors&  m_Descriptors;
 
-    UniformBuffer& m_UniformBuffer;
-    VulkanDescriptors& m_Descriptors;
+    std::vector<RenderObject> m_Objects;
 };
-

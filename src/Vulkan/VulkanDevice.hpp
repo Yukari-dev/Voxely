@@ -51,6 +51,7 @@ public:
         VkPhysicalDevice device
     ) const;
 
+
 private:
     void PickPhysicalDevice(
         const VulkanInstance& instance

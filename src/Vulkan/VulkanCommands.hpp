@@ -59,4 +59,6 @@ private:
     VkDescriptorSet m_DescriptorSet{};
     VkPipelineLayout m_PipelineLayout;
 
+    VkImageView m_DepthImageView;
+
 };
