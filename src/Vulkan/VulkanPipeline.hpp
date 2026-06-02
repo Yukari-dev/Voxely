@@ -17,18 +17,15 @@ public:
 
     ~VulkanPipeline();
 
-    VkRenderPass GetRenderPass() const
-    {
+    VkRenderPass GetRenderPass() const{
         return m_RenderPass;
     }
 
-    VkPipelineLayout GetPipelineLayout() const
-    {
+    VkPipelineLayout GetPipelineLayout() const{
         return m_PipelineLayout;
     }
 
-    VkPipeline GetPipeline() const
-    {
+    VkPipeline GetPipeline() const{
         return m_GraphicsPipeline;
     }
 
@@ -49,12 +46,9 @@ private:
 
     VkFormat m_SwapchainFormat;
 
-    VkRenderPass m_RenderPass =
-        VK_NULL_HANDLE;
+    VkRenderPass m_RenderPass = VK_NULL_HANDLE;
+    VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
+    VkPipeline m_GraphicsPipeline = VK_NULL_HANDLE;
 
-    VkPipelineLayout m_PipelineLayout =
-        VK_NULL_HANDLE;
-
-    VkPipeline m_GraphicsPipeline =
-        VK_NULL_HANDLE;
+    VkDescriptorSetLayout m_DescriptorLayout;
 };

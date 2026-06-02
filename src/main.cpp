@@ -1,9 +1,9 @@
 #include "Window.hpp"
 #include "Vulkan/VulkanContext.hpp"
 #include <vector>
-#include "Renderer/Vertex.hpp"
-#include "Renderer/VertexBuffer.hpp"
-#include "Renderer/IndexBuffer.hpp"
+#include "Graphics/Vertex.hpp"
+#include "Graphics/VertexBuffer.hpp"
+#include "Graphics/IndexBuffer.hpp"
 #include "Renderer/Renderer.hpp"
 
 int main(void){

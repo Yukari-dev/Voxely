@@ -1,8 +1,8 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include "../Vulkan/VulkanContext.hpp"
-#include "VertexBuffer.hpp"
-#include "IndexBuffer.hpp"
+#include "../Graphics/VertexBuffer.hpp"
+#include "../Graphics/IndexBuffer.hpp"
 #include <vector>
 
 class Renderer{

@@ -74,8 +74,6 @@ void VulkanInstance::CreateInstance(){
             "Failed to create Vulkan instance."
         );
     }
-
-    std::cout << "Instance Created.\n";
 }
 
 void VulkanInstance::CreateSurface(GLFWwindow* window){
@@ -90,8 +88,6 @@ void VulkanInstance::CreateSurface(GLFWwindow* window){
             "Failed to create surface."
         );
     }
-
-    std::cout << "Surface Created.\n";
 }
 
 std::vector<const char*> VulkanInstance::GetRequiredExtensions(){
