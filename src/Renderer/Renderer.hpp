@@ -17,7 +17,7 @@ public:
     void Remove(RenderObject* obj);
     void Clear();
 
-    void UpdateCamera(float aspectRatio, glm::vec3 eye, glm::vec3 target);
+    void UpdateCamera(const glm::mat4& view, const glm::mat4& projection);
 
 private:
     void InitDescriptors();

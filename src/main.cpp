@@ -3,12 +3,18 @@
 #include "Graphics/Mesh.hpp"
 #include "Renderer/Renderer.hpp"
 #include "Graphics/MeshFactory.hpp"
+#include "Core/Camera.hpp"
+#include "Core/CameraController.hpp"
 #include <vector>
 
 int main(void){
     float width = 1280.0f;
     float height = 720.0f;
     Window window(int(width), int(height), "Voxely");
+
+    Camera camera(45.0f, width/height, 0.1f, 1000.0f);
+    CameraController cameraController(camera, window.GetNativeWindow());
+
     VulkanContext context(window.GetNativeWindow());
 
     Renderer renderer(context);
@@ -21,10 +27,18 @@ int main(void){
         meshes.push_back(factory.CreateVoxel());
         renderer.Add(*meshes.back(), Transform{.position = {(float)i, 0, 0}});
     }
+    
+    float lastTime = 0.0f;
+    float deltaTime = 0.0f;
 
     while(!window.ShouldClose()){
+        float currentTime = glfwGetTime();
+        deltaTime = lastTime - currentTime;
+        lastTime = currentTime;
+
         window.PollEvents();
-        renderer.UpdateCamera(width/height, {0, 5, 3}, {0, 0, 0});
+        cameraController.Update(deltaTime);
+        renderer.UpdateCamera(camera.GetView(), camera.GetProjection());
         context.DrawFrame();
     }
     vkDeviceWaitIdle(context.GetDevice());

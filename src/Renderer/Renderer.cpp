@@ -46,10 +46,9 @@ void Renderer::BuildCommands() {
     m_Context.RecordCommands(m_Objects);
 }
 
-void Renderer::UpdateCamera(float aspectRatio, glm::vec3 eye, glm::vec3 target) {
+void Renderer::UpdateCamera(const glm::mat4& view, const glm::mat4& projection) {
     UniformBufferObject ubo{};
-    ubo.view       = glm::lookAt(eye, target, glm::vec3(0,1,0));
-    ubo.projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
-    ubo.projection[1][1] *= -1;
+    ubo.view = view;
+    ubo.projection = projection;
     m_UniformBuffer.Update(ubo);
 }
