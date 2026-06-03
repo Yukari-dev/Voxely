@@ -1,10 +1,10 @@
 #include "VulkanCommands.hpp"
 
-#include "VulkanDevice.hpp"
-#include "VulkanSwapchain.hpp"
-#include "VulkanPipeline.hpp"
-#include "VulkanDescriptors.hpp"
-#include "../Graphics/Mesh.hpp"
+#include "../Devices/VulkanDevice.hpp"
+#include "../Swapchain/VulkanSwapchain.hpp"
+#include "../Pipeline/VulkanPipeline.hpp"
+#include "../Descriptors/VulkanDescriptors.hpp"
+#include "../../Graphics/Mesh.hpp"
 
 #include <stdexcept>
 

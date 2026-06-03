@@ -11,17 +11,17 @@ find_package(glm REQUIRED)
 add_executable(Voxely
     src/main.cpp
     src/Window.cpp
-    src/Vulkan/VulkanContext.cpp
-    src/Vulkan/VulkanInstance.cpp
-    src/Vulkan/VulkanDevice.cpp
-    src/Vulkan/VulkanPipeline.cpp
+    src/Vulkan/Context/VulkanContext.cpp
+    src/Vulkan/Instance/VulkanInstance.cpp
+    src/Vulkan/Devices/VulkanDevice.cpp
+    src/Vulkan/Pipeline/VulkanPipeline.cpp
+    src/Vulkan/Descriptors/VulkanDescriptors.cpp
+    src/Vulkan/Swapchain/VulkanSwapchain.cpp
+    src/Vulkan/Commands/VulkanCommands.cpp
+    src/Vulkan/Synchronisation/VulkanSync.cpp
     src/Core/Paths.cpp
-    src/Vulkan/VulkanSwapchain.cpp
-    src/Vulkan/VulkanCommands.cpp
-    src/Vulkan/VulkanSync.cpp
     src/Renderer/Renderer.cpp
     src/Graphics/IndexBuffer.cpp
-    src/Vulkan/VulkanDescriptors.cpp
     src/Renderer/UniformBuffer.cpp
 )
 

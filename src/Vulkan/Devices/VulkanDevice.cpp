@@ -1,5 +1,5 @@
 #include "VulkanDevice.hpp"
-#include "VulkanInstance.hpp"
+#include "../Instance/VulkanInstance.hpp"
 
 #include <set>
 #include <stdexcept>

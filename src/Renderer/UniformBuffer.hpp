@@ -1,7 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include "../Graphics/UniformBufferObject.hpp"
-#include "../Vulkan/VulkanDevice.hpp"
+#include "../Vulkan/Devices/VulkanDevice.hpp"
 
 class UniformBuffer{
 public:

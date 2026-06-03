@@ -1,13 +1,13 @@
 #include "VulkanPipeline.hpp"
 
-#include "VulkanDevice.hpp"
-#include "VulkanSwapchain.hpp"
+#include "../Devices/VulkanDevice.hpp"
+#include "../Swapchain/VulkanSwapchain.hpp"
 
 #include <fstream>
 #include <stdexcept>
 #include <array>
-#include "../Core/Paths.hpp"
-#include "../Graphics/Vertex.hpp"
+#include "../../Core/Paths.hpp"
+#include "../../Graphics/Vertex.hpp"
 
 VulkanPipeline::VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain& swapchain, VkDescriptorSetLayout descriptorLayout) {
     m_Device = device.GetDevice();
@@ -161,11 +161,8 @@ void VulkanPipeline::CreateRenderPass()
 void VulkanPipeline::CreateGraphicsPipeline()
 {
     auto vertCode = ReadFile((Paths::Shaders() / "triangle.vert.spv").string());
-
     auto fragCode = ReadFile((Paths::Shaders() / "triangle.frag.spv").string());
-
     VkShaderModule vertModule = CreateShaderModule(vertCode);
-
     VkShaderModule fragModule = CreateShaderModule(fragCode);
 
     VkPipelineShaderStageCreateInfo vertStage{};

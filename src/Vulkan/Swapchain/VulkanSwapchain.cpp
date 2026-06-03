@@ -1,7 +1,7 @@
 #include "VulkanSwapchain.hpp"
 
-#include "VulkanInstance.hpp"
-#include "VulkanDevice.hpp"
+#include "../Instance/VulkanInstance.hpp"
+#include "../Devices/VulkanDevice.hpp"
 
 #include <GLFW/glfw3.h>
 

@@ -1,7 +1,6 @@
 #include "VulkanDescriptors.hpp"
 #include <stdexcept>
 
-
 VulkanDescriptors::VulkanDescriptors(VulkanDevice& device) : m_Device(device.GetDevice()){
     CreateUniformLayout();
     CreatePool();

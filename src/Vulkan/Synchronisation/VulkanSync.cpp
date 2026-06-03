@@ -1,8 +1,8 @@
 #include "VulkanSync.hpp"
 
-#include "VulkanDevice.hpp"
-#include "VulkanSwapchain.hpp"
-#include "VulkanCommands.hpp"
+#include "../Devices/VulkanDevice.hpp"
+#include "../Swapchain/VulkanSwapchain.hpp"
+#include "../Commands/VulkanCommands.hpp"
 
 #include <stdexcept>
 

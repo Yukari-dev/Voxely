@@ -1,6 +1,6 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "../Vulkan/VulkanDevice.hpp"
+#include "../Devices/VulkanDevice.hpp"
 
 
 class VulkanDescriptors{

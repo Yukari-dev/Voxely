@@ -2,8 +2,8 @@
 
 #include <vulkan/vulkan.h>
 #include <vector>
-#include "../Graphics/VertexBuffer.hpp"
-#include "../Graphics/IndexBuffer.hpp"
+#include "../../Graphics/VertexBuffer.hpp"
+#include "../../Graphics/IndexBuffer.hpp"
 
 class VulkanDevice;
 class VulkanSwapchain;

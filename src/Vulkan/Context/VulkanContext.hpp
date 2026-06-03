@@ -3,8 +3,8 @@
 #include <vulkan/vulkan.h>
 #include <memory>
 #include <GLFW/glfw3.h>
-#include "../Graphics/VertexBuffer.hpp"
-#include "../Graphics/IndexBuffer.hpp"
+#include "../../Graphics/VertexBuffer.hpp"
+#include "../../Graphics/IndexBuffer.hpp"
 
 class VulkanInstance;
 class VulkanDevice;

@@ -1,14 +1,14 @@
 #include "VulkanContext.hpp"
 
-#include "VulkanInstance.hpp"
-#include "VulkanDevice.hpp"
-#include "VulkanSwapchain.hpp"
-#include "VulkanPipeline.hpp"
-#include "VulkanCommands.hpp"
-#include "VulkanSync.hpp"
-#include "VulkanDescriptors.hpp"
-#include "../Renderer/UniformBuffer.hpp"
-#include "../Graphics/Mesh.hpp"
+#include "../Instance/VulkanInstance.hpp"
+#include "../Devices/VulkanDevice.hpp"
+#include "../Swapchain/VulkanSwapchain.hpp"
+#include "../Pipeline/VulkanPipeline.hpp"
+#include "../Commands/VulkanCommands.hpp"
+#include "../Synchronisation/VulkanSync.hpp"
+#include "../Descriptors/VulkanDescriptors.hpp"
+#include "../../Renderer/UniformBuffer.hpp"
+#include "../../Graphics/Mesh.hpp"
 
 VulkanContext::VulkanContext(GLFWwindow* window){
     m_Instance   = std::make_unique<VulkanInstance>(window);

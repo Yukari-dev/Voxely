@@ -1,12 +1,12 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <vector>
-#include "../Vulkan/VulkanContext.hpp"
+#include "../Vulkan/Context/VulkanContext.hpp"
 #include "../Graphics/VertexBuffer.hpp"
 #include "../Graphics/IndexBuffer.hpp"
 #include "../Graphics/Mesh.hpp"
 #include "UniformBuffer.hpp"
-#include "../Vulkan/VulkanDescriptors.hpp"
+#include "../Vulkan/Descriptors/VulkanDescriptors.hpp"
 
 class Renderer {
 public:
