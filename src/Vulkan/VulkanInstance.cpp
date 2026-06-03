@@ -212,5 +212,5 @@ VKAPI_ATTR VkBool32 VKAPI_CALL VulkanInstance::DebugCallback(
     void* userData) 
 {
     std::cerr << "Validation Layer: " << callbackData->pMessage << std::endl;
-    return VK_FALSE; // Returning VK_FALSE denotes that the call that triggered the validation should not be aborted.
+    return VK_FALSE;
 }

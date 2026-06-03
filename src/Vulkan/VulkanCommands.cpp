@@ -4,6 +4,7 @@
 #include "VulkanSwapchain.hpp"
 #include "VulkanPipeline.hpp"
 #include "VulkanDescriptors.hpp"
+#include "../Graphics/Mesh.hpp"
 
 #include <stdexcept>
 
@@ -152,7 +153,7 @@ void VulkanCommands::CreateCommandBuffers()
     }
 }
 
-void VulkanCommands::Record(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer)
+void VulkanCommands::Record(const std::vector<RenderObject>& meshes)
 {
     for(size_t i = 0; i < m_CommandBuffers.size(); i++){
         VkCommandBufferBeginInfo beginInfo{};
@@ -192,7 +193,15 @@ void VulkanCommands::Record(const VertexBuffer& vertexBuffer, const IndexBuffer&
         scissor.extent = m_Extent;
         vkCmdSetScissor(m_CommandBuffers[i], 0, 1, &scissor);
 
-        DrawMesh(m_CommandBuffers[i], vertexBuffer, indexBuffer);
+        for(auto &mesh : meshes){
+            glm::mat4 model = mesh.transform.GetMatrix();
+            vkCmdPushConstants(
+                m_CommandBuffers[i], m_PipelineLayout, 
+                VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4),
+                &model
+            );
+            DrawMesh(m_CommandBuffers[i], *mesh.vertexBuffer, *mesh.indexBuffer);
+        }
 
         vkCmdEndRenderPass(m_CommandBuffers[i]);
         vkEndCommandBuffer(m_CommandBuffers[i]);

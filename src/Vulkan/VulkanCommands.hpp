@@ -9,6 +9,7 @@ class VulkanDevice;
 class VulkanSwapchain;
 class VulkanPipeline;
 class VulkanDescriptors;
+class RenderObject;
 
 class VulkanCommands
 {
@@ -21,7 +22,7 @@ public:
     );
 
     ~VulkanCommands();
-    void Record(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer);
+    void Record(const std::vector<RenderObject>& objects);
 
     void DrawMesh(VkCommandBuffer cmd, const VertexBuffer &vertexBuffer, const IndexBuffer &indexBuffer);
 

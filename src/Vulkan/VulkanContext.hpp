@@ -15,6 +15,7 @@ class VulkanSync;
 class VulkanBuffer;
 class VulkanDescriptors;
 class UniformBuffer;
+class RenderObject;
 
 class VulkanContext
 {
@@ -27,7 +28,7 @@ public:
     VkPhysicalDevice GetPhysicalDevice() const;
     UniformBuffer& GetUniformBuffer() const;
     VulkanDescriptors& GetDescriptors() const;
-    void RecordCommands(const VertexBuffer& vertexBuffer, const IndexBuffer &indexBuffer);
+    void RecordCommands(const std::vector<RenderObject>& objects);
 
 private:
     GLFWwindow* m_Window;

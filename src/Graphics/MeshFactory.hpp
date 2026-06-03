@@ -22,6 +22,21 @@ public:
         throw std::runtime_error("Unknown mesh type");
     }
 
+    std::unique_ptr<Mesh> CreateVoxel() {
+        return std::make_unique<Mesh>(
+            m_Device, m_PhysicalDevice,
+            Primitives::CubeVertices(),
+            Primitives::CubeIndices()
+        );
+    }
+
+    std::unique_ptr<Mesh> CreateFromData(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices){
+        return std::make_unique<Mesh>(
+            m_Device, m_PhysicalDevice,
+            vertices, indices
+        );
+    }
+
 private:
     VkDevice         m_Device;
     VkPhysicalDevice m_PhysicalDevice;

@@ -14,8 +14,6 @@ VulkanPipeline::VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain
     m_SwapchainFormat = swapchain.GetImageFormat();
     m_DepthFormat = swapchain.GetDepthFormat();
     m_DescriptorLayout = descriptorLayout;
-    printf("swapchain format: %d\n", m_SwapchainFormat);
-    printf("depth format: %d\n", m_DepthFormat);
     CreateRenderPass();
     CreateGraphicsPipeline();
 }
@@ -269,10 +267,17 @@ void VulkanPipeline::CreateGraphicsPipeline()
     depthStencil.depthBoundsTestEnable = VK_FALSE;
     depthStencil.stencilTestEnable = VK_FALSE;
 
+    VkPushConstantRange pushRange{};
+    pushRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    pushRange.offset = 0;
+    pushRange.size = sizeof(glm::mat4);
+
     VkPipelineLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layoutInfo.setLayoutCount = 1;
     layoutInfo.pSetLayouts = &m_DescriptorLayout;
+    layoutInfo.pushConstantRangeCount = 1;
+    layoutInfo.pPushConstantRanges = &pushRange;
 
     vkCreatePipelineLayout(
         m_Device,
@@ -282,7 +287,6 @@ void VulkanPipeline::CreateGraphicsPipeline()
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-
     pipelineInfo.stageCount = 2;
     pipelineInfo.pStages = stages;
     pipelineInfo.pVertexInputState = &vertexInput;
@@ -304,8 +308,7 @@ void VulkanPipeline::CreateGraphicsPipeline()
         &pipelineInfo,
         nullptr,
         &m_GraphicsPipeline) != VK_SUCCESS){
-        throw std::runtime_error(
-            "Failed to create pipeline.");
+        throw std::runtime_error("Failed to create Graphics Pipeline.");
     }
 
     vkDestroyShaderModule(

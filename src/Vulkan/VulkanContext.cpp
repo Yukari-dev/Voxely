@@ -8,6 +8,7 @@
 #include "VulkanSync.hpp"
 #include "VulkanDescriptors.hpp"
 #include "../Renderer/UniformBuffer.hpp"
+#include "../Graphics/Mesh.hpp"
 
 VulkanContext::VulkanContext(GLFWwindow* window){
     m_Instance   = std::make_unique<VulkanInstance>(window);
@@ -31,8 +32,8 @@ void VulkanContext::DrawFrame(){
     m_Sync->DrawFrame();
 }
 
-void VulkanContext::RecordCommands(const VertexBuffer& vertexBuffer, const IndexBuffer &indexBuffer) {
-    m_Commands->Record(vertexBuffer, indexBuffer);
+void VulkanContext::RecordCommands(const std::vector<RenderObject>& objects) {
+    m_Commands->Record(objects);
 }
 
 VkDevice VulkanContext::GetDevice() const { return m_Device->GetDevice(); }

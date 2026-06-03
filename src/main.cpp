@@ -15,12 +15,16 @@ int main(void){
 
     MeshFactory factory(context.GetDevice(), context.GetPhysicalDevice());
 
-    auto cube = factory.Create(MeshType::Cube);
-    renderer.Add(*cube, Transform{ .position = {0,0,0} });
+    std::vector<std::unique_ptr<Mesh>> meshes;
+    int n = 10;
+    for(int i = 0; i < n; i++){
+        meshes.push_back(factory.CreateVoxel());
+        renderer.Add(*meshes.back(), Transform{.position = {(float)i, 0, 0}});
+    }
 
     while(!window.ShouldClose()){
         window.PollEvents();
-        renderer.UpdateCamera(width/height, {0, 0, 3}, {0, 0, 0});
+        renderer.UpdateCamera(width/height, {0, 5, 3}, {0, 0, 0});
         context.DrawFrame();
     }
     vkDeviceWaitIdle(context.GetDevice());

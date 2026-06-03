@@ -42,15 +42,12 @@ void Renderer::InitDescriptors() {
 }
 
 void Renderer::BuildCommands() {
-    if (m_Objects.empty()) return;
-    for(auto& obj : m_Objects){
-        m_Context.RecordCommands(*obj.vertexBuffer, *obj.indexBuffer);
-    }
+    if(m_Objects.empty()) return;
+    m_Context.RecordCommands(m_Objects);
 }
 
 void Renderer::UpdateCamera(float aspectRatio, glm::vec3 eye, glm::vec3 target) {
     UniformBufferObject ubo{};
-    ubo.model      = m_Objects.empty() ? glm::mat4(1.0f) : m_Objects[0].transform.GetMatrix();
     ubo.view       = glm::lookAt(eye, target, glm::vec3(0,1,0));
     ubo.projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
     ubo.projection[1][1] *= -1;
