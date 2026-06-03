@@ -14,17 +14,17 @@ public:
         float speed = m_Speed * deltaTime;
 
         if(glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
-            m_Camera.m_Position -= m_Camera.GetForward() * speed;
-        if(glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)
             m_Camera.m_Position += m_Camera.GetForward() * speed;
+        if(glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)
+            m_Camera.m_Position -= m_Camera.GetForward() * speed;
         if(glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS)
-            m_Camera.m_Position += m_Camera.GetRight() * speed;
-        if(glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS)
             m_Camera.m_Position -= m_Camera.GetRight() * speed;
+        if(glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS)
+            m_Camera.m_Position += m_Camera.GetRight() * speed;
         if(glfwGetKey(m_Window, GLFW_KEY_Q) == GLFW_PRESS)
-            m_Camera.m_Position.y += speed;
-        if(glfwGetKey(m_Window, GLFW_KEY_E) == GLFW_PRESS)
             m_Camera.m_Position.y -= speed;
+        if(glfwGetKey(m_Window, GLFW_KEY_E) == GLFW_PRESS)
+            m_Camera.m_Position.y += speed;
         if(glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(m_Window, true);
     }

@@ -23,6 +23,9 @@ add_executable(Voxely
     src/Renderer/Renderer.cpp
     src/Graphics/IndexBuffer.cpp
     src/Renderer/UniformBuffer.cpp
+    src/Vulkan/Shaders/VulkanShaderModule.cpp
+    src/Vulkan/Shaders/VulkanShader.cpp
+    src/Application/Application.cpp
 )
 
 target_link_libraries(

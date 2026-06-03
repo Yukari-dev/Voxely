@@ -2,6 +2,7 @@
 
 #include "../Devices/VulkanDevice.hpp"
 #include "../Swapchain/VulkanSwapchain.hpp"
+#include "../Shaders/VulkanShader.hpp"
 
 #include <fstream>
 #include <stdexcept>
@@ -9,17 +10,17 @@
 #include "../../Core/Paths.hpp"
 #include "../../Graphics/Vertex.hpp"
 
-VulkanPipeline::VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain& swapchain, VkDescriptorSetLayout descriptorLayout) {
+VulkanPipeline::VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain& swapchain, VkDescriptorSetLayout descriptorLayout){
     m_Device = device.GetDevice();
     m_SwapchainFormat = swapchain.GetImageFormat();
     m_DepthFormat = swapchain.GetDepthFormat();
     m_DescriptorLayout = descriptorLayout;
+    m_Shaders = std::make_unique<VulkanShader>(m_Device, "Default.vert", "Default.frag");
     CreateRenderPass();
     CreateGraphicsPipeline();
 }
 
-VulkanPipeline::~VulkanPipeline()
-{
+VulkanPipeline::~VulkanPipeline(){
     if (m_GraphicsPipeline)
         vkDestroyPipeline(m_Device, m_GraphicsPipeline, nullptr);
 
@@ -30,36 +31,6 @@ VulkanPipeline::~VulkanPipeline()
         vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
 }
 
-std::vector<char>
-VulkanPipeline::ReadFile(
-    const std::string &filename)
-{
-    std::ifstream file(
-        filename,
-        std::ios::ate |
-            std::ios::binary);
-
-    if (!file.is_open())
-    {
-        throw std::runtime_error(
-            "Failed to open shader.");
-    }
-
-    size_t size =
-        (size_t)file.tellg();
-
-    std::vector<char> buffer(size);
-
-    file.seekg(0);
-
-    file.read(
-        buffer.data(),
-        size);
-
-    file.close();
-
-    return buffer;
-}
 
 VkShaderModule
 VulkanPipeline::CreateShaderModule(
@@ -91,8 +62,7 @@ VulkanPipeline::CreateShaderModule(
     return shaderModule;
 }
 
-void VulkanPipeline::CreateRenderPass()
-{
+void VulkanPipeline::CreateRenderPass(){
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = m_SwapchainFormat;
     colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -158,32 +128,8 @@ void VulkanPipeline::CreateRenderPass()
     }
 }
 
-void VulkanPipeline::CreateGraphicsPipeline()
-{
-    auto vertCode = ReadFile((Paths::Shaders() / "triangle.vert.spv").string());
-    auto fragCode = ReadFile((Paths::Shaders() / "triangle.frag.spv").string());
-    VkShaderModule vertModule = CreateShaderModule(vertCode);
-    VkShaderModule fragModule = CreateShaderModule(fragCode);
-
-    VkPipelineShaderStageCreateInfo vertStage{};
-    vertStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-
-    vertStage.stage = VK_SHADER_STAGE_VERTEX_BIT;
-
-    vertStage.module = vertModule;
-
-    vertStage.pName = "main";
-
-    VkPipelineShaderStageCreateInfo fragStage{};
-    fragStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-
-    fragStage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-
-    fragStage.module = fragModule;
-
-    fragStage.pName = "main";
-
-    VkPipelineShaderStageCreateInfo stages[] = {vertStage, fragStage};
+void VulkanPipeline::CreateGraphicsPipeline(){
+    // TODO: MAKE THE SHADER MODULE
 
     VkPipelineVertexInputStateCreateInfo vertexInput{};
     vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -284,8 +230,9 @@ void VulkanPipeline::CreateGraphicsPipeline()
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    pipelineInfo.stageCount = 2;
-    pipelineInfo.pStages = stages;
+    auto shaderStages = m_Shaders->GetShadersStageCreateInfo();
+    pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
+    pipelineInfo.pStages = shaderStages.data();
     pipelineInfo.pVertexInputState = &vertexInput;
     pipelineInfo.pInputAssemblyState = &assembly;
     pipelineInfo.pViewportState = &viewportState;
@@ -307,18 +254,6 @@ void VulkanPipeline::CreateGraphicsPipeline()
         &m_GraphicsPipeline) != VK_SUCCESS){
         throw std::runtime_error("Failed to create Graphics Pipeline.");
     }
-
-    vkDestroyShaderModule(
-        m_Device,
-        vertModule,
-        nullptr
-    );
-
-    vkDestroyShaderModule(
-        m_Device,
-        fragModule,
-        nullptr
-    );
 }
 
 void VulkanPipeline::SetDescriptorLayout(VkDescriptorSetLayout layout) {

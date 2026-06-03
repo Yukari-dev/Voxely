@@ -5,5 +5,5 @@ std::filesystem::path Paths::Assets(){
 }
 
 std::filesystem::path Paths::Shaders(){
-    return Assets() / "shaders";
+    return Assets() / "shaders/";
 }
