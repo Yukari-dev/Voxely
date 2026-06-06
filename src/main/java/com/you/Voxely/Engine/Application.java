@@ -1,6 +1,6 @@
 package com.you.Voxely.Engine;
 
-import com.you.Voxely.Engine.Mesh.MeshCreator.MeshType;
+import com.you.Voxely.Mesh.MeshCreator.MeshType;
 import com.you.Voxely.Renderer.Renderer;
 
 public class Application{

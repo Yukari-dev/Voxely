@@ -1,4 +1,4 @@
-package com.you.Voxely.Engine.Mesh;
+package com.you.Voxely.Mesh;
 
 public class MeshCreator {
     public static enum MeshType{

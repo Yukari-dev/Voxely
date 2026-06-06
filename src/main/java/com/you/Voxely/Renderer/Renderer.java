@@ -3,8 +3,8 @@ package com.you.Voxely.Renderer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.you.Voxely.Engine.Mesh.*;
-import com.you.Voxely.Engine.Mesh.MeshCreator.MeshType;
+import com.you.Voxely.Mesh.*;
+import com.you.Voxely.Mesh.MeshCreator.MeshType;
 
 public class Renderer {
     private Shader shader;

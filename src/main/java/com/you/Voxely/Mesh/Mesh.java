@@ -1,4 +1,4 @@
-package com.you.Voxely.Engine.Mesh;
+package com.you.Voxely.Mesh;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;

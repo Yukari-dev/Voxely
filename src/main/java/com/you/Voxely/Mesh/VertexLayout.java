@@ -1,4 +1,4 @@
-package com.you.Voxely.Engine.Mesh;
+package com.you.Voxely.Mesh;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL30.*;
