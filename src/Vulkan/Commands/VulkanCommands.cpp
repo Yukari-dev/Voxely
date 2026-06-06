@@ -165,7 +165,6 @@ void VulkanCommands::Record(const std::vector<RenderObject>& meshes)
         clearValues[0].color = {{0.05f, 0.08f, 0.15f, 1.0f}};
         clearValues[1].depthStencil = {1.0f, 0};
 
-
         VkRenderPassBeginInfo renderInfo{};
         renderInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderInfo.renderPass = m_RenderPass;

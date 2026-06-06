@@ -11,23 +11,19 @@ public:
         : m_Device(device), m_PhysicalDevice(physicalDevice) {}
 
     std::unique_ptr<Mesh> Create(MeshType type) {
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
+
         switch(type) {
             case MeshType::Cube:
-                return std::make_unique<Mesh>(
-                    m_Device, m_PhysicalDevice,
-                    Primitives::CubeVertices(),
-                    Primitives::CubeIndices()
-                );
+                Primitives::CubeMesh(vertices, indices);
+                break;
         }
-        throw std::runtime_error("Unknown mesh type");
+        return std::make_unique<Mesh>(m_Device, m_PhysicalDevice, vertices, indices);
     }
 
     std::unique_ptr<Mesh> CreateVoxel() {
-        return std::make_unique<Mesh>(
-            m_Device, m_PhysicalDevice,
-            Primitives::CubeVertices(),
-            Primitives::CubeIndices()
-        );
+        return Create(MeshType::Cube);
     }
 
     std::unique_ptr<Mesh> CreateFromData(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices){

@@ -1,33 +1,104 @@
 #pragma once
 #include "Vertex.hpp"
 #include <vector>
+#include <array>
+#include <glm/glm.hpp>
 
-namespace Primitives{
-    inline std::vector<Vertex> CubeVertices(){
-        return {
+namespace Primitives {
+
+    struct FaceDef {
+        glm::vec3 corners[4];
+        glm::vec3 normal;
+        glm::vec2 uvs[4];
+    };
+
+    inline std::array<FaceDef, 6> CubeFaces() {
+        return {{
             // front
-            {{-0.5f, -0.5f,  0.5f}, {1,0,0}},
-            {{ 0.5f, -0.5f,  0.5f}, {0,1,0}},
-            {{ 0.5f,  0.5f,  0.5f}, {0,0,1}},
-            {{-0.5f,  0.5f,  0.5f}, {1,1,0}},
-            // bakc
-            {{-0.5f, -0.5f, -0.5f}, {1,0,1}},
-            {{ 0.5f, -0.5f, -0.5f}, {0,1,1}},
-            {{ 0.5f,  0.5f, -0.5f}, {1,1,1}},
-            {{-0.5f,  0.5f, -0.5f}, {0,0,0}},
-        };
+            {
+                {{ -0.5f, -0.5f,  0.5f },
+                 {  0.5f, -0.5f,  0.5f },
+                 {  0.5f,  0.5f,  0.5f },
+                 { -0.5f,  0.5f,  0.5f }},
+                { 0, 0, 1 },
+                {{ 0,0 }, { 1,0 }, { 1,1 }, { 0,1 }}
+            },
+            // back
+            {
+                {{  0.5f, -0.5f, -0.5f },
+                 { -0.5f, -0.5f, -0.5f },
+                 { -0.5f,  0.5f, -0.5f },
+                 {  0.5f,  0.5f, -0.5f }},
+                { 0, 0, -1 },
+                {{ 0,0 }, { 1,0 }, { 1,1 }, { 0,1 }}
+            },
+            // right
+            {
+                {{  0.5f, -0.5f,  0.5f },
+                 {  0.5f, -0.5f, -0.5f },
+                 {  0.5f,  0.5f, -0.5f },
+                 {  0.5f,  0.5f,  0.5f }},
+                { 1, 0, 0 },
+                {{ 0,0 }, { 1,0 }, { 1,1 }, { 0,1 }}
+            },
+            // left
+            {
+                {{ -0.5f, -0.5f, -0.5f },
+                 { -0.5f, -0.5f,  0.5f },
+                 { -0.5f,  0.5f,  0.5f },
+                 { -0.5f,  0.5f, -0.5f }},
+                { -1, 0, 0 },
+                {{ 0,0 }, { 1,0 }, { 1,1 }, { 0,1 }}
+            },
+            // top
+            {
+                {{ -0.5f,  0.5f,  0.5f },
+                 {  0.5f,  0.5f,  0.5f },
+                 {  0.5f,  0.5f, -0.5f },
+                 { -0.5f,  0.5f, -0.5f }},
+                { 0, 1, 0 },
+                {{ 0,0 }, { 1,0 }, { 1,1 }, { 0,1 }}
+            },
+            // bottom
+            {
+                {{ -0.5f, -0.5f, -0.5f },
+                 {  0.5f, -0.5f, -0.5f },
+                 {  0.5f, -0.5f,  0.5f },
+                 { -0.5f, -0.5f,  0.5f }},
+                { 0, -1, 0 },
+                {{ 0,0 }, { 1,0 }, { 1,1 }, { 0,1 }}
+            },
+        }};
     }
 
-    inline std::vector<uint32_t> CubeIndices() {
-        return {
-            0,2,1, 2,0,3, // front
-            5,7,4, 7,5,6, // back
-            4,3,0, 3,4,7, // left
-            1,6,5, 6,1,2, // right
-            3,6,2, 6,3,7, // top
-            4,1,5, 1,4,0, // bottom
-        };
+    inline void BuildMesh(
+        const std::array<FaceDef, 6>& faces,
+        std::vector<Vertex>& outVertices,
+        std::vector<uint32_t>& outIndices,
+        glm::vec3 offset = {0,0,0})
+    {
+        for(auto& face : faces) {
+            uint32_t base = static_cast<uint32_t>(outVertices.size());
+            for(int i = 0; i < 4; i++) {
+                outVertices.push_back({
+                    face.corners[i] + offset,
+                    face.normal,
+                    face.uvs[i]
+                });
+            }
+            outIndices.insert(outIndices.end(), {
+                base+0, base+2, base+1,
+                base+2, base+0, base+3
+            });
+        }
     }
 
-} // namespace name
+    inline void CubeMesh(
+        std::vector<Vertex>& outVertices,
+        std::vector<uint32_t>& outIndices,
+        glm::vec3 offset = {0,0,0})
+    {
+        BuildMesh(CubeFaces(), outVertices, outIndices, offset);
+    }
 
+} // namespace Primitives

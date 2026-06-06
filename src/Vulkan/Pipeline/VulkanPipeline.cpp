@@ -15,7 +15,7 @@ VulkanPipeline::VulkanPipeline(const VulkanDevice& device, const VulkanSwapchain
     m_SwapchainFormat = swapchain.GetImageFormat();
     m_DepthFormat = swapchain.GetDepthFormat();
     m_DescriptorLayout = descriptorLayout;
-    m_Shaders = std::make_unique<VulkanShader>(m_Device, "Default.vert", "Default.frag");
+    m_Shader = std::make_unique<VulkanShader>(m_Device, "Default.vert", "Default.frag");
     CreateRenderPass();
     CreateGraphicsPipeline();
 }
@@ -32,10 +32,7 @@ VulkanPipeline::~VulkanPipeline(){
 }
 
 
-VkShaderModule
-VulkanPipeline::CreateShaderModule(
-    const std::vector<char> &code)
-{
+VkShaderModule VulkanPipeline::CreateShaderModule(const std::vector<char> &code){
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType =
         VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -129,8 +126,6 @@ void VulkanPipeline::CreateRenderPass(){
 }
 
 void VulkanPipeline::CreateGraphicsPipeline(){
-    // TODO: MAKE THE SHADER MODULE
-
     VkPipelineVertexInputStateCreateInfo vertexInput{};
     vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
@@ -139,7 +134,7 @@ void VulkanPipeline::CreateGraphicsPipeline(){
     bindingDescription.stride = sizeof(Vertex);
     bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-    std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+    std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
     attributeDescriptions[0].location = 0;
     attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
     attributeDescriptions[0].offset = offsetof(Vertex, position);
@@ -148,9 +143,19 @@ void VulkanPipeline::CreateGraphicsPipeline(){
     attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
     attributeDescriptions[1].offset = offsetof(Vertex, color);
 
+    // attributeDescriptions[2].location = 2;
+    // attributeDescriptions[2].format = VK_FORMAT_R8G8B8_SRGB;
+    // attributeDescriptions[2].offset = offsetof(Vertex, uv);
+
+    attributeDescriptions[2].location = 2;
+    attributeDescriptions[2].binding = 0;
+    attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+    attributeDescriptions[2].offset = offsetof(Vertex, uv);
+
+
     vertexInput.vertexBindingDescriptionCount = 1;
     vertexInput.pVertexBindingDescriptions = &bindingDescription;
-    vertexInput.vertexAttributeDescriptionCount = 2;
+    vertexInput.vertexAttributeDescriptionCount = 3;
     vertexInput.pVertexAttributeDescriptions = attributeDescriptions.data();
     
     VkDescriptorSetLayoutBinding mvpLayoutBinding{};
@@ -230,7 +235,7 @@ void VulkanPipeline::CreateGraphicsPipeline(){
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    auto shaderStages = m_Shaders->GetShadersStageCreateInfo();
+    auto shaderStages = m_Shader->GetShadersStageCreateInfo();
     pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
     pipelineInfo.pStages = shaderStages.data();
     pipelineInfo.pVertexInputState = &vertexInput;
@@ -243,7 +248,6 @@ void VulkanPipeline::CreateGraphicsPipeline(){
     pipelineInfo.layout = m_PipelineLayout;
     pipelineInfo.renderPass = m_RenderPass;
     pipelineInfo.pDepthStencilState = &depthStencil;
-
 
     if (vkCreateGraphicsPipelines(
         m_Device,
@@ -258,4 +262,8 @@ void VulkanPipeline::CreateGraphicsPipeline(){
 
 void VulkanPipeline::SetDescriptorLayout(VkDescriptorSetLayout layout) {
     m_DescriptorLayout = layout;
+}
+
+VulkanShader* VulkanPipeline::GetShader() const{
+    return m_Shader.get();
 }

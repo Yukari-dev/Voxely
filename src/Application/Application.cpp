@@ -7,7 +7,7 @@ Application::Application(const char* title, float width, float height)
     m_MeshFactory(m_Context.GetDevice(), m_Context.GetPhysicalDevice()),
     m_Camera(45.0f, width/height, 0.1f, 1000.0f),
     m_CameraController(m_Camera, m_Window.GetNativeWindow()),
-    m_Shader(m_Context.GetDevice()){}
+    m_Shader(m_Context.GetDevice(), false){}
 
 Application::~Application() {
     vkDeviceWaitIdle(m_Context.GetDevice());

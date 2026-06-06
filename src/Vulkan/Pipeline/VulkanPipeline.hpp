@@ -32,6 +32,8 @@ public:
 
     void SetShader(std::string &path, ShaderType shaderType);
     void SetShader(std::string &vertexPath, std::string &fragmentPath);
+
+    VulkanShader* GetShader() const;
 private:
     void CreateRenderPass();
     void CreateGraphicsPipeline();
@@ -50,8 +52,7 @@ private:
     VkFormat m_SwapchainFormat;
     VkFormat m_DepthFormat;
 
-    
-    std::unique_ptr<VulkanShader> m_Shaders;
+    std::unique_ptr<VulkanShader> m_Shader;
 
     VkRenderPass m_RenderPass = VK_NULL_HANDLE;
     VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
