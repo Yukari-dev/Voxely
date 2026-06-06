@@ -1,7 +1,11 @@
 package com.you.Voxely;
 
+import com.you.Voxely.Engine.Application;
+
 public class Main {
     public static void main( String[] args ){
-        System.out.println( "Hello World!" );
+        Application application = new Application();
+        application.Execute();
+        application.Exit();
     }
 }
