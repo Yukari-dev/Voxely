@@ -28,6 +28,8 @@ public:
     VkPhysicalDevice GetPhysicalDevice() const;
     UniformBuffer& GetUniformBuffer() const;
     VulkanDescriptors& GetDescriptors() const;
+    VkQueue GetGraphicsQueue() const;
+    VkCommandPool GetCommandPool() const;
     void RecordCommands(const std::vector<RenderObject>& objects);
 
 private:

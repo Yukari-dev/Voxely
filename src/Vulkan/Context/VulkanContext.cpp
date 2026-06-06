@@ -40,3 +40,7 @@ VkDevice VulkanContext::GetDevice() const { return m_Device->GetDevice(); }
 VkPhysicalDevice VulkanContext::GetPhysicalDevice() const { return m_Device->GetPhysicalDevice(); }
 UniformBuffer& VulkanContext::GetUniformBuffer() const { return *m_UniformBuffer; }
 VulkanDescriptors& VulkanContext::GetDescriptors() const { return *m_Descriptors; }
+
+
+VkQueue VulkanContext::GetGraphicsQueue() const { return m_Device->GetGraphicsQueue(); }
+VkCommandPool VulkanContext::GetCommandPool() const { return m_Commands->GetCommandPool(); }

@@ -13,6 +13,7 @@ public:
     void AllocateSet();
 
     void UpdateUniformBuffer(VkBuffer uniformBuffer, VkDeviceSize bufferSize);
+    void UpdateTexture(VkImageView imageView, VkSampler sampler);
     
     VkDescriptorSetLayout GetLayout() const;
     VkDescriptorSet GetSet() const;

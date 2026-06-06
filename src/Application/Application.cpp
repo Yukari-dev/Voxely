@@ -36,3 +36,17 @@ Mesh& Application::CreateMesh(MeshType type, Transform transform) {
     return *m_Meshes.back();
 }
 
+void Application::LoadTexture(const std::string& path) {
+    m_Texture = std::make_unique<TextureLoader>(
+        m_Context.GetDevice(),
+        m_Context.GetPhysicalDevice(),
+        m_Context.GetGraphicsQueue(),
+        m_Context.GetCommandPool(),
+        path
+    );
+    m_Context.GetDescriptors().UpdateTexture(
+        m_Texture->GetTextureImageView(),
+        m_Texture->GetTextureSampler()
+    );
+}
+

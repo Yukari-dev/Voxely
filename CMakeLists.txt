@@ -26,6 +26,7 @@ add_executable(Voxely
     src/Vulkan/Shaders/VulkanShaderModule.cpp
     src/Vulkan/Shaders/VulkanShader.cpp
     src/Application/Application.cpp
+    src/Vulkan/Textures/TextureLoader.cpp
 )
 
 target_link_libraries(

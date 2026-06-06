@@ -6,6 +6,7 @@
 #include "../Core/Camera.hpp"
 #include "../Core/CameraController.hpp"
 #include "../Vulkan/Shaders/VulkanShader.hpp"
+#include "../Vulkan/Textures/TextureLoader.hpp"
 #include <vector>
 #include <memory>
 
@@ -20,6 +21,7 @@ protected:
     virtual void OnStart() {}
     virtual void OnUpdate(float dt) {}
 
+    void LoadTexture(const std::string& path);
     Mesh &CreateMesh(MeshType type, Transform transform = {});
     Camera &GetCamera() { return m_Camera; }
 
@@ -33,6 +35,7 @@ private:
     VulkanShader m_Shader;
     MeshFactory m_MeshFactory;
     std::vector<std::unique_ptr<Mesh>> m_Meshes;
+    std::unique_ptr<TextureLoader> m_Texture;
     Camera m_Camera;
     CameraController m_CameraController;
 
