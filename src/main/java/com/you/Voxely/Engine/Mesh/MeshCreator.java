@@ -25,6 +25,7 @@ public class MeshCreator {
             0, 1, 3,
             1, 2, 3 
         };  
-        return new Mesh(vertices, indices);
+        VertexLayout layout = new VertexLayout().Add(VertexLayout.AttributeType.POSITION);
+        return new Mesh(vertices, indices, layout);
     }
 }

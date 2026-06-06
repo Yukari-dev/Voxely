@@ -11,10 +11,13 @@ public class Mesh {
 
     private float[] vertices;
     private int[] indices;
+    private VertexLayout layout;
 
-    public Mesh(float[] vertices, int[] indices){
+
+    public Mesh(float[] vertices, int[] indices, VertexLayout layout){
         this.vertices = vertices;
         this.indices = indices;
+        this.layout = layout;
         Construct();
     }
 
@@ -23,7 +26,7 @@ public class Mesh {
         vbo = CreateBuffer(GL_ARRAY_BUFFER, vertices);
         ebo = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, indices);
 
-        VertexAttribPointer(0, 3, GL_FLOAT, 3 * Float.BYTES);
+        layout.Apply();   
         glBindVertexArray(0);
     }
 
@@ -55,11 +58,6 @@ public class Mesh {
         buffer.put(data).flip();
         glBufferData(type, buffer, GL_STATIC_DRAW);
         return buf;
-    }
-
-    private void VertexAttribPointer(int index, int size, int type, int stride){
-        glVertexAttribPointer(index, size, type, false, stride, 0);
-        glEnableVertexAttribArray(index);
     }
 
 }

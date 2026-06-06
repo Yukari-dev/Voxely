@@ -2,6 +2,7 @@
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/Mesh/Mesh.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/Mesh/MeshCreator.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/Mesh/Vertex.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/Mesh/VertexLayout.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/Window.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Main.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Renderer/Renderer.java
