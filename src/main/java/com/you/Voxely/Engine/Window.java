@@ -3,12 +3,9 @@ package com.you.Voxely.Engine;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
-import javax.management.RuntimeErrorException;
 
 public class Window{
     private long window;
@@ -32,7 +29,7 @@ public class Window{
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        window = glfwCreateWindow(width, height, "Voxely", 0, 0);
+        window = glfwCreateWindow(width, height, title, 0, 0);
 
         glfwMakeContextCurrent(window);
 
@@ -52,8 +49,11 @@ public class Window{
         glClearColor(r, g, b, 1.0f);
     }
 
-    public void ClearAndSwapBuffersAndPollEvents(){
+    public void Clear(){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    public void SwapAndPoll(){
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
