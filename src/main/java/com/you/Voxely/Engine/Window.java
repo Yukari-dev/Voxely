@@ -74,6 +74,10 @@ public class Window{
         this.height = height;
     }
 
+    public long GetWindow(){
+        return window;
+    }
+
     public void Exit(){
         glfwTerminate();
     }

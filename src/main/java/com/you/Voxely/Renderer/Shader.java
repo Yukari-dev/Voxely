@@ -7,6 +7,9 @@ import java.nio.file.Paths;
 import static org.lwjgl.opengl.GL46.*;
 import org.lwjgl.system.MemoryStack;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Shader{
     private int programID;
@@ -82,6 +85,37 @@ public class Shader{
         int loc = GetLocation(name);
         glUniform1f(loc, value);
     }
+
+    public void SetVec2(String name, Vector2f value){
+        int loc = GetLocation(name);
+        glUniform2f(loc, value.x, value.y);
+    }
+
+    public void SetVec3(String name, Vector3f value){
+        int loc = GetLocation(name);
+        glUniform3f(loc, value.x, value.y, value.z);
+    }
+
+    public void SetVec4(String name, Vector4f value) {
+        glUniform4f(GetLocation(name), value.x, value.y, value.z, value.w);
+    }
+
+    public void ApplyUniforms(UniformBlock block) {
+        Use();
+        for (var entry : block.GetAll().entrySet()) {
+            String name  = entry.getKey();
+            Object value = entry.getValue();
+
+            if      (value instanceof Matrix4f m)  SetMatrix(name, m);
+            else if (value instanceof Float f)      SetFloat(name, f);
+            else if (value instanceof Integer i)    SetInt(name, i);
+            else if (value instanceof Boolean b)    SetBool(name, b);
+            else if (value instanceof Vector2f v)   SetVec2(name, v);
+            else if (value instanceof Vector3f v)   SetVec3(name, v);
+            else if (value instanceof Vector4f v)   SetVec4(name, v);
+        }
+    }
+
 
     public int GetLocation(String name){
         return glGetUniformLocation(programID, name);

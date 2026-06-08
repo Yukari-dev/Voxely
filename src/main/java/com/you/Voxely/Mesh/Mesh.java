@@ -2,19 +2,27 @@ package com.you.Voxely.Mesh;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
+
+import com.you.Voxely.Renderer.UniformBlock;
 
 import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {
     private int vao, vbo, ebo;
 
+    private Vector3f position;
+
     private float[] vertices;
     private int[] indices;
     private VertexLayout layout;
 
 
-    public Mesh(float[] vertices, int[] indices, VertexLayout layout){
+    public Mesh(Vector3f position, float[] vertices, int[] indices, VertexLayout layout){
+        this.position = position;
         this.vertices = vertices;
         this.indices = indices;
         this.layout = layout;
@@ -34,6 +42,10 @@ public class Mesh {
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+    }
+
+    public Matrix4f GetModelMatrix(){
+        return new Matrix4f().identity().translate(position).scale(1);
     }
 
     private int CreateVertexArrayBuffer(){

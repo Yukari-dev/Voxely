@@ -1,20 +1,22 @@
 package com.you.Voxely.Mesh;
 
+import org.joml.Vector3f;
+
 public class MeshCreator {
     public static enum MeshType{
         CUBE
     };
 
-    public static Mesh CreateMesh(MeshType meshType){
+    public static Mesh CreateMesh(MeshType meshType, Vector3f position){
         switch (meshType) {
             case CUBE:
-                return CreateUnitCube();
+                return CreateUnitCube(position);
             default:
                 return null;
         }
     }
 
-    private static Mesh CreateUnitCube(){
+    private static Mesh CreateUnitCube(Vector3f position){
         float[] vertices = {
             0.5f,  0.5f, 0.0f, 
             0.5f, -0.5f, 0.0f, 
@@ -26,6 +28,6 @@ public class MeshCreator {
             1, 2, 3 
         };  
         VertexLayout layout = new VertexLayout().Add(VertexLayout.AttributeType.POSITION);
-        return new Mesh(vertices, indices, layout);
+        return new Mesh(new Vector3f(position), vertices, indices, layout);
     }
 }
