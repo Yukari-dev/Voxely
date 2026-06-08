@@ -20,8 +20,8 @@ public class Renderer {
         this.camera = camera;
     }
 
-    public void CreateMesh(MeshType meshType){
-        Mesh mesh = MeshCreator.CreateMesh(meshType, new Vector3f(0));
+    public void CreateMesh(MeshType meshType, Vector3f position, float[] color){
+        Mesh mesh = MeshCreator.CreateMesh(meshType, position, color);
         AddMesh(mesh);
     }
 

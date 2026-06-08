@@ -20,7 +20,15 @@ public class Application{
     }
 
     public void Execute(){
-        renderer.CreateMesh(MeshType.CUBE);
+        float[] cubePalette = new float[]{
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f,
+            1.0f, 1.0f, 0.0f,
+            1.0f, 0.0f, 1.0f,
+            0.0f, 1.0f, 1.0f
+        };
+        renderer.CreateMesh(MeshType.CUBE, new Vector3f(0f), cubePalette);
         Loop();
     }
 

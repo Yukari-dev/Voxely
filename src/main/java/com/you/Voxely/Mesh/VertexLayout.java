@@ -11,7 +11,7 @@ public class VertexLayout {
         POSITION(3),
         NORMAL(3),
         UV(2),
-        COLOR(4);
+        COLOR(3);
 
         public final int componentCount;
         AttributeType(int componentCount){
@@ -39,6 +39,11 @@ public class VertexLayout {
         attributes.add(new Attribute(type, nextLocation, stride));
         stride += type.componentCount * Float.BYTES;
         nextLocation++;
+        return this;
+    }
+
+    public VertexLayout SetStartLocation(int location) {
+        this.nextLocation = location;
         return this;
     }
 

@@ -11,23 +11,34 @@ public class MeshCreator {
         FRONT, BACK, RIGHT, LEFT, TOP, BOTTOM
     };
 
-    public static Mesh CreateMesh(MeshType meshType, Vector3f position){
+    public static Mesh CreateMesh(MeshType meshType, Vector3f position, float[] color){
         switch (meshType) {
             case CUBE:
-                return CreateFace(6, position);
+                return CreateFace(6, position, color);
             default:
                 return null;
         }
     }
 
-    private static Mesh CreateFace(int facesCount, Vector3f position){
+    private static Mesh CreateFace(int facesCount, Vector3f position, float[] faceColors){
         float[] vertices = new float[facesCount*4*3];
         int[] indices = new int[facesCount*3*2];
+        float[] colors = new float[facesCount * 4 * 3];
         float unit = 0.5f;
         for(int face = 0; face < facesCount; face++){
             FaceDirection dir = FaceDirection.values()[face];
             int vOffset = face * 12;
             int iOffset = face * 6;
+
+            int cIndex = face * 3;
+            float r = faceColors[cIndex];
+            float g = faceColors[cIndex + 1];
+            float b = faceColors[cIndex + 2];
+
+            colors[vOffset]     = r; colors[vOffset + 1] = g; colors[vOffset + 2] = b;
+            colors[vOffset + 3] = r; colors[vOffset + 4] = g; colors[vOffset + 5] = b;
+            colors[vOffset + 6] = r; colors[vOffset + 7] = g; colors[vOffset + 8] = b;
+            colors[vOffset + 9] = r; colors[vOffset + 10]= g; colors[vOffset + 11]= b;
 
             switch(dir){
                 case FRONT:
@@ -145,22 +156,10 @@ public class MeshCreator {
             indices[iOffset+4] = vertexStartIndex+2;
             indices[iOffset+5] = vertexStartIndex+3;
         }
-        VertexLayout layout = new VertexLayout().Add(VertexLayout.AttributeType.POSITION);
-        return new Mesh(position, vertices, indices, layout);
+        return new Mesh(position, vertices, indices, colors);
     }
 
-    private static Mesh CreateUnitCube(Vector3f position){
-        float[] vertices = {
-             0.5f,  0.5f, 0.0f, 
-             0.5f, -0.5f, 0.0f, 
-            -0.5f, -0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f  
-        };
-        int[] indices = {  
-            0, 1, 3,
-            1, 2, 3 
-        };  
-        VertexLayout layout = new VertexLayout().Add(VertexLayout.AttributeType.POSITION);
-        return new Mesh(new Vector3f(position), vertices, indices, layout);
+    public static Mesh CreateUnitCube(Vector3f position, int faces, float[] color){
+        return CreateFace(faces, position, color);
     }
 }

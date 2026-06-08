@@ -12,29 +12,34 @@ import com.you.Voxely.Renderer.UniformBlock;
 import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {
-    private int vao, vbo, ebo;
+    private int vao, posVBO, colVBO, ebo;
 
     private Vector3f position;
 
     private float[] vertices;
     private int[] indices;
-    private VertexLayout layout;
+    private float[] colors;
 
-
-    public Mesh(Vector3f position, float[] vertices, int[] indices, VertexLayout layout){
+    public Mesh(Vector3f position, float[] vertices, int[] indices, float[] colors){
         this.position = position;
         this.vertices = vertices;
         this.indices = indices;
-        this.layout = layout;
+        this.colors = colors;
         Construct();
     }
 
     public void Construct(){
         vao = CreateVertexArrayBuffer();
-        vbo = CreateBuffer(GL_ARRAY_BUFFER, vertices);
+        posVBO = CreateBuffer(GL_ARRAY_BUFFER, vertices);
+        VertexLayout posLayout = new VertexLayout().SetStartLocation(0).Add(VertexLayout.AttributeType.POSITION);
+        posLayout.Apply();
+        
+        colVBO = CreateBuffer(GL_ARRAY_BUFFER, colors);
+        VertexLayout colLayout = new VertexLayout().SetStartLocation(1).Add(VertexLayout.AttributeType.COLOR);
+        colLayout.Apply();
+
         ebo = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, indices);
 
-        layout.Apply();   
         glBindVertexArray(0);
     }
 
