@@ -2,6 +2,7 @@ package com.you.Voxely.Engine;
 
 import org.joml.Vector3f;
 
+import com.you.Voxely.Debug.DebugControls;
 import com.you.Voxely.Input.Input;
 import com.you.Voxely.Mesh.MeshCreator.MeshType;
 import com.you.Voxely.Renderer.Renderer;
@@ -31,6 +32,8 @@ public class Application{
     }
 
     private void Update(){
+        Input.Update();
+        DebugControls.Update();
         camera.Update();
     }
 

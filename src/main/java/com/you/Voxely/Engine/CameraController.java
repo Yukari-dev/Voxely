@@ -21,7 +21,7 @@ public class CameraController {
         this.window = window;
         this.camera = camera;
 
-        // glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         glfwSetCursorPosCallback(window.GetWindow(), (win, xPos, yPos) -> {
             if(firstMouse){
