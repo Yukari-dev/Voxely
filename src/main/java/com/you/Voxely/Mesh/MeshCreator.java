@@ -11,10 +11,10 @@ public class MeshCreator {
         FRONT, BACK, RIGHT, LEFT, TOP, BOTTOM
     };
 
-    public static Mesh CreateMesh(MeshType meshType, Vector3f position, float[] color){
+    public static Mesh CreateMesh(MeshType meshType, int faceCount, Vector3f position, float[] color){
         switch (meshType) {
             case CUBE:
-                return CreateFace(6, position, color);
+                return CreateFace(faceCount, position, color);
             default:
                 return null;
         }

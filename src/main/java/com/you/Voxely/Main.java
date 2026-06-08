@@ -1,11 +1,10 @@
 package com.you.Voxely;
 
-import com.you.Voxely.Engine.Application;
+import com.you.Voxely.Game.Voxely;
 
 public class Main {
     public static void main( String[] args ){
-        Application application = new Application();
-        application.Execute();
-        application.Exit();
+        Voxely voxely = new Voxely();
+        voxely.StartEngine(1280, 720, "Voxely");
     }
 }

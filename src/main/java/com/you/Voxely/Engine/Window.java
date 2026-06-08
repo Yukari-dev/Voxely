@@ -12,6 +12,7 @@ public class Window{
     private int width;
     private int height;
     private String title;
+    private boolean cursorVisibility;
 
     public Window(int width, int height, String title){
         this.width = width;
@@ -56,6 +57,15 @@ public class Window{
     public void SwapAndPoll(){
         glfwSwapBuffers(window);
         glfwPollEvents();
+    }
+    
+    public void SetCursorVisibility(boolean visible){
+        cursorVisibility = visible;
+        glfwSetInputMode(window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL: GLFW_CURSOR_DISABLED);
+    }
+
+    public boolean IsCursorVisible(){
+        return cursorVisibility;
     }
 
     public void SetWindowShouldClose(boolean should){
