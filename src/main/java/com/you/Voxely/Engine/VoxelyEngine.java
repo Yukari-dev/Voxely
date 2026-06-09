@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import com.you.Voxely.Debug.DebugControls;
 import com.you.Voxely.Game.VoxelyUI;
 import com.you.Voxely.Input.Input;
+import com.you.Voxely.Mesh.Mesh;
 import com.you.Voxely.Mesh.MeshCreator;
 import com.you.Voxely.Renderer.Renderer;
 import com.you.Voxely.Time.Time;
@@ -33,6 +34,10 @@ public abstract class VoxelyEngine {
         renderer.CreateMesh(MeshCreator.MeshType.CUBE, faceCount, position, faceColors);
     }
 
+    public void CreateMesh(Mesh mesh){
+        renderer.CreateMesh(mesh);
+    }
+
     private void Loop(){
         while(!window.IsWindowShouldClose()){
             Time.Update();
@@ -57,6 +62,10 @@ public abstract class VoxelyEngine {
         }
     }
 
+    public Window GetWindow(){
+        return window;
+    }
+    
     protected abstract void OnStart();
     protected abstract void OnImGuiRender();
     protected abstract void OnUpdate();

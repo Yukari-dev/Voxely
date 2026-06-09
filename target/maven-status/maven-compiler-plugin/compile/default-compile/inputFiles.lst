@@ -4,6 +4,8 @@
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/CameraController.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/VoxelyEngine.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/Window.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Chunk.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkBuilder.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Voxely.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/VoxelyUI.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Input/Input.java

@@ -13,6 +13,7 @@ public class Window{
     private int height;
     private String title;
     private boolean cursorVisibility;
+    private boolean syncEnabled;
 
     public Window(int width, int height, String title){
         this.width = width;
@@ -41,7 +42,7 @@ public class Window{
         });
         GL.createCapabilities();
 
-        glfwSwapInterval(1);
+        SetSyncEnablility(syncEnabled);
         glViewport(0, 0, width, height);
         glEnable(GL_DEPTH_TEST);
     }
@@ -66,6 +67,15 @@ public class Window{
 
     public boolean IsCursorVisible(){
         return cursorVisibility;
+    }
+
+    public void SetSyncEnablility(boolean enabled){
+        syncEnabled = enabled;
+        glfwSwapInterval(syncEnabled ? 1 : 0);
+    }
+
+    public boolean GetSyncEnability(){
+        return syncEnabled;
     }
 
     public void SetWindowShouldClose(boolean should){

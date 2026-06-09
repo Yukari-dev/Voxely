@@ -7,8 +7,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
-import com.you.Voxely.Renderer.UniformBlock;
-
 import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {

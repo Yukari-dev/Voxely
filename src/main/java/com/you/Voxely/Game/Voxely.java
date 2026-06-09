@@ -2,31 +2,22 @@ package com.you.Voxely.Game;
 
 import org.joml.Vector3f;
 
-import com.you.Voxely.Debug.DebugControls;
 import com.you.Voxely.Engine.VoxelyEngine;
+import com.you.Voxely.Mesh.Mesh;
 import com.you.Voxely.Time.Time;
 
 import imgui.ImGui;
+import imgui.type.ImBoolean;
 
 public class Voxely extends VoxelyEngine {
 
     @Override
     protected void OnStart() {
-        int chunkWidth = 8;
-        int chunkDepth = 8;
-        int chunkHeight = 8;
-        float[] chunkColor = new float[]{
-            1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1
-        };
+        Chunk chunk = new Chunk(new Vector3f(0f));
 
-        for(int y = 0; y < chunkHeight; y++){
-            for(int z = 0; z < chunkDepth; z++){
-                for(int x = 0; x < chunkWidth; x++){
-                    SpawnCube(6, new Vector3f(x, y, z), chunkColor);
-                }
-            }
-        }
+        Mesh chunkMesh = ChunkBuilder.GenerateChunkMesh(chunk);
 
+        CreateMesh(chunkMesh);
     }
 
     @Override
@@ -34,16 +25,30 @@ public class Voxely extends VoxelyEngine {
 
     }
 
+    private ImBoolean syncEnability = new ImBoolean(false);
+
     @Override
     protected void OnImGuiRender() {
         ImGui.begin("Debug");
 
-        ImGui.separator();
-
         String fpsCounter = String.format("FPS: %.0f", Time.GetFPS());
         ImGui.text(fpsCounter);
-        String deltaTimeCounter = String.format("Delta Time: %f", Time.GetDeltaTime());
+        String deltaTimeCounter = String.format("Delta Time: %fms", Time.GetDeltaTime());
         ImGui.text(deltaTimeCounter);
+
+        ImGui.separator();
+        Runtime runtime = Runtime.getRuntime();
+        long usedMemoryBytes = runtime.totalMemory() - runtime.freeMemory();
+        double usedMemoryMegabytes = usedMemoryBytes / (1024.0 * 1024.0);
+        double maxMemoryMegabytes = runtime.maxMemory() / (1024.0 * 1024.0);
+
+        ImGui.text(String.format("Used Heap: %.2f MB", usedMemoryMegabytes));
+        ImGui.text(String.format("Max Heap:  %.2f MB", maxMemoryMegabytes));
+
+        
+        if(ImGui.checkbox("Sync", syncEnability)){
+            GetWindow().SetSyncEnablility(syncEnability.get());
+        }
 
         ImGui.end();
     }
