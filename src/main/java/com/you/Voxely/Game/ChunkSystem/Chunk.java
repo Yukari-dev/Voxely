@@ -1,4 +1,4 @@
-package com.you.Voxely.Game;
+package com.you.Voxely.Game.ChunkSystem;
 
 import org.joml.Vector3f;
 
@@ -11,13 +11,14 @@ public class Chunk {
 
     public Chunk(Vector3f position){
         this.position = position;
+        System.out.println(position);
         GenerateDummyTerrain();
     }
 
     private void GenerateDummyTerrain(){
         for(int x = 0; x < SIZE; x++){
             for(int z = 0; z < SIZE; z++){
-                for(int y = 0; y < SIZE; y++){
+                for(int y = 0; y < SIZE/2; y++){
                     blocks[x][y][z] = 1;
                 }
             }

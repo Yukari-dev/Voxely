@@ -1,8 +1,9 @@
 package com.you.Voxely.Game;
 
-import org.joml.Vector3f;
-
 import com.you.Voxely.Engine.VoxelyEngine;
+import com.you.Voxely.Game.ChunkSystem.Chunk;
+import com.you.Voxely.Game.ChunkSystem.ChunkBuilder;
+import com.you.Voxely.Game.ChunkSystem.World;
 import com.you.Voxely.Mesh.Mesh;
 import com.you.Voxely.Time.Time;
 
@@ -13,11 +14,14 @@ public class Voxely extends VoxelyEngine {
 
     @Override
     protected void OnStart() {
-        Chunk chunk = new Chunk(new Vector3f(0f));
+        World world = new World();
 
-        Mesh chunkMesh = ChunkBuilder.GenerateChunkMesh(chunk);
+        world.GenerateTerrain();
 
-        CreateMesh(chunkMesh);
+        for(Chunk chunk : world.GetActiveChunks().values()){
+            Mesh bakedMesh = ChunkBuilder.GenerateChunkMesh(world, chunk);
+            CreateMesh(bakedMesh);
+        }
     }
 
     @Override

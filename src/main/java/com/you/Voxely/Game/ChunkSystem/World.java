@@ -1,0 +1,51 @@
+package com.you.Voxely.Game.ChunkSystem;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.joml.Vector3f;
+
+public class World {
+    private Map<ChunkPosition, Chunk> activeChunks = new HashMap<>();
+
+    private int renderDistance = 1;
+
+    public void GenerateTerrain(){
+        for(int x = -renderDistance; x <= renderDistance; x++){
+            for(int z = -renderDistance; z <= renderDistance; z++){
+                ChunkPosition pos = new ChunkPosition(x, 0, z);
+                Vector3f worldRealPos = new Vector3f(x * Chunk.SIZE, 0, z * Chunk.SIZE);
+                activeChunks.put(pos, new Chunk(worldRealPos));
+            }
+        }
+    }
+
+    public boolean IsBlockSolidAt(int globalX, int globalY, int globalZ) {
+        int chunkX = (int) Math.floor((double) globalX / Chunk.SIZE);
+        int chunkY = (int) Math.floor((double) globalY / Chunk.SIZE);
+        int chunkZ = (int) Math.floor((double) globalZ / Chunk.SIZE);
+
+        ChunkPosition targetKey = new ChunkPosition(chunkX, chunkY, chunkZ);
+        Chunk targetChunk = activeChunks.get(targetKey);
+
+        if (targetChunk == null) return false;
+
+        int localX = ((globalX % Chunk.SIZE) + Chunk.SIZE) % Chunk.SIZE;
+        int localY = ((globalY % Chunk.SIZE) + Chunk.SIZE) % Chunk.SIZE;
+        int localZ = ((globalZ % Chunk.SIZE) + Chunk.SIZE) % Chunk.SIZE;
+
+        return targetChunk.IsSolid(localX, localY, localZ);
+    }
+
+    public void SetRenderDistance(int renderDistance){
+        this.renderDistance = renderDistance;
+    }
+
+    public int GetRenderDistance(){
+        return renderDistance;
+    }
+
+    public Map<ChunkPosition, Chunk> GetActiveChunks(){
+        return activeChunks;
+    }
+}

@@ -10,6 +10,7 @@ public class CameraController {
     private Camera camera;
     private Window window;
     private float speed     = 5.0f;
+    private float runSpeed     = 20.0f;
     private float sensitivity = 0.1f;
     private double lastX    = 0;
     private double lastY    = 0;
@@ -46,7 +47,9 @@ public class CameraController {
         deltaTime   = now - lastTime;
         lastTime    = now;
 
-        float step  = speed * deltaTime;
+        float actualSpeed = Input.IsKeyJustPressed(GLFW_KEY_LEFT_SHIFT) ? runSpeed : speed;
+
+        float step  = actualSpeed * deltaTime;
 
         if(Input.IsKeyPressed(GLFW_KEY_W))
             camera.SetPosition(camera.GetPosition().add(camera.GetForward().mul(step, new Vector3f())));
