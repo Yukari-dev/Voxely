@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.you.Voxely.Mesh.Mesh;
 
-public class ChunkBuilder {
+public class ChunkMeshBuilder {
     public static Mesh GenerateChunkMesh(World world, Chunk chunk){
         List<Float> verticesList = new ArrayList<>();
         List<Integer> indicesList = new ArrayList<>();
@@ -20,9 +20,9 @@ public class ChunkBuilder {
             for(int z = 0; z < Chunk.SIZE; z++){
                 for(int y = 0; y < Chunk.SIZE; y++){
                     
-                    int globalX = (int)chunk.GetPosition().x + x;
-                    int globalY = (int)chunk.GetPosition().y + y;
-                    int globalZ = (int)chunk.GetPosition().z + z;
+                    int globalX = chunkX + x;
+                    int globalY = chunkY + y;
+                    int globalZ = chunkZ + z;
 
                     if(!world.IsBlockSolidAt(globalX, globalY, globalZ)) continue;
                     
@@ -92,7 +92,8 @@ public class ChunkBuilder {
         float[] finalVertices = ConvertFloatListToArray(verticesList);
         int[] finalIndices = ConvertIntListToArray(indicesList);
         float[] finalColors = ConvertFloatListToArray(colorsList);
-        return new Mesh(chunk.GetPosition(), finalVertices, finalIndices, finalColors);
+        Mesh greedyMesh = GreedyMeshBuilder.GenerateGreedyMesh(chunk, verticesList);
+        return greedyMesh;
     }
 
     private static void AddVertex(List<Float> list, float x, float y, float z){

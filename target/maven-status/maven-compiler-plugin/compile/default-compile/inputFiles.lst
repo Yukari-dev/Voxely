@@ -5,8 +5,9 @@
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/VoxelyEngine.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Engine/Window.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/Chunk.java
-/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/ChunkBuilder.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/ChunkMeshBuilder.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/ChunkPosition.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/GreedyMeshBuilder.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/World.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Voxely.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/VoxelyUI.java

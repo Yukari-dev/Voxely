@@ -11,14 +11,13 @@ public class Chunk {
 
     public Chunk(Vector3f position){
         this.position = position;
-        System.out.println(position);
         GenerateDummyTerrain();
     }
 
     private void GenerateDummyTerrain(){
         for(int x = 0; x < SIZE; x++){
             for(int z = 0; z < SIZE; z++){
-                for(int y = 0; y < SIZE/2; y++){
+                for(int y = 0; y < SIZE; y++){
                     blocks[x][y][z] = 1;
                 }
             }
@@ -36,5 +35,10 @@ public class Chunk {
 
     public Vector3f GetPosition(){
         return position;
+    }
+
+    public boolean IsBlockType(int x, int y, int z, int type){
+        if(IsBlockOutOfBondaries(x, y, z)) return false;
+        return blocks[x][y][z] == type;
     }
 }

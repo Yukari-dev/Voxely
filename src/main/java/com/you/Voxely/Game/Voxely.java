@@ -2,24 +2,35 @@ package com.you.Voxely.Game;
 
 import com.you.Voxely.Engine.VoxelyEngine;
 import com.you.Voxely.Game.ChunkSystem.Chunk;
-import com.you.Voxely.Game.ChunkSystem.ChunkBuilder;
+import com.you.Voxely.Game.ChunkSystem.ChunkMeshBuilder;
 import com.you.Voxely.Game.ChunkSystem.World;
 import com.you.Voxely.Mesh.Mesh;
 import com.you.Voxely.Time.Time;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
+import imgui.type.ImInt;
 
 public class Voxely extends VoxelyEngine {
+    private World world;
+    
+    private final int[] renderDistanceValue = new int[]{3}; 
+
+    private ImBoolean syncEnability = new ImBoolean(false);
 
     @Override
     protected void OnStart() {
-        World world = new World();
+        world = new World();
+        world.SetRenderDistance(4);
 
+        BuildActiveWorldGeometry();
+    }
+
+    private void BuildActiveWorldGeometry(){
         world.GenerateTerrain();
 
         for(Chunk chunk : world.GetActiveChunks().values()){
-            Mesh bakedMesh = ChunkBuilder.GenerateChunkMesh(world, chunk);
+            Mesh bakedMesh = ChunkMeshBuilder.GenerateChunkMesh(world, chunk);
             CreateMesh(bakedMesh);
         }
     }
@@ -28,8 +39,6 @@ public class Voxely extends VoxelyEngine {
     protected void OnUpdate() {
 
     }
-
-    private ImBoolean syncEnability = new ImBoolean(false);
 
     @Override
     protected void OnImGuiRender() {
@@ -49,6 +58,18 @@ public class Voxely extends VoxelyEngine {
         ImGui.text(String.format("Used Heap: %.2f MB", usedMemoryMegabytes));
         ImGui.text(String.format("Max Heap:  %.2f MB", maxMemoryMegabytes));
 
+        
+        ImGui.separator();
+
+        if (ImGui.sliderInt("Render Distance", renderDistanceValue, 1, 16)) {
+            world.SetRenderDistance(renderDistanceValue[0]);
+        }
+
+        if (ImGui.button("Apply and Regenerate Chunk Grid")) {
+            BuildActiveWorldGeometry();
+        }
+
+        ImGui.separator();
         
         if(ImGui.checkbox("Sync", syncEnability)){
             GetWindow().SetSyncEnablility(syncEnability.get());
