@@ -13,16 +13,13 @@ public class ChunkMeshBuilder {
 
         float unit = 0.5f;
         int vertexCounter = 0;
-        int chunkX = (int)chunk.GetPosition().x;
-        int chunkY = (int)chunk.GetPosition().y;
-        int chunkZ = (int)chunk.GetPosition().z;
         for(int x = 0; x < Chunk.SIZE; x++){
             for(int z = 0; z < Chunk.SIZE; z++){
                 for(int y = 0; y < Chunk.SIZE; y++){
                     
-                    int globalX = chunkX + x;
-                    int globalY = chunkY + y;
-                    int globalZ = chunkZ + z;
+                    int globalX = (int)chunk.GetPosition().x + x;
+                    int globalY = (int)chunk.GetPosition().y + y;
+                    int globalZ = (int)chunk.GetPosition().z + z;
 
                     if(!world.IsBlockSolidAt(globalX, globalY, globalZ)) continue;
                     
@@ -92,8 +89,7 @@ public class ChunkMeshBuilder {
         float[] finalVertices = ConvertFloatListToArray(verticesList);
         int[] finalIndices = ConvertIntListToArray(indicesList);
         float[] finalColors = ConvertFloatListToArray(colorsList);
-        Mesh greedyMesh = GreedyMeshBuilder.GenerateGreedyMesh(chunk, verticesList);
-        return greedyMesh;
+        return new Mesh(chunk.GetPosition(), finalVertices, finalIndices, finalColors);
     }
 
     private static void AddVertex(List<Float> list, float x, float y, float z){

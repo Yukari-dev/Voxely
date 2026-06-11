@@ -9,13 +9,11 @@ import com.you.Voxely.Time.Time;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
-import imgui.type.ImInt;
 
 public class Voxely extends VoxelyEngine {
     private World world;
     
     private final int[] renderDistanceValue = new int[]{3}; 
-
     private ImBoolean syncEnability = new ImBoolean(false);
 
     @Override
@@ -27,11 +25,13 @@ public class Voxely extends VoxelyEngine {
     }
 
     private void BuildActiveWorldGeometry(){
+        ClearChunkMeshes();
+        world.ClearActiveChunks();
         world.GenerateTerrain();
 
         for(Chunk chunk : world.GetActiveChunks().values()){
             Mesh bakedMesh = ChunkMeshBuilder.GenerateChunkMesh(world, chunk);
-            CreateMesh(bakedMesh);
+            CreateChunkMesh(bakedMesh);
         }
     }
 
@@ -61,7 +61,7 @@ public class Voxely extends VoxelyEngine {
         
         ImGui.separator();
 
-        if (ImGui.sliderInt("Render Distance", renderDistanceValue, 1, 16)) {
+        if (ImGui.sliderInt("Render Distance", renderDistanceValue, 1, 32)) {
             world.SetRenderDistance(renderDistanceValue[0]);
         }
 

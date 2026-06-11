@@ -8,6 +8,7 @@
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/ChunkMeshBuilder.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/ChunkPosition.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/GreedyMeshBuilder.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/MeshResultData.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/World.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Voxely.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/VoxelyUI.java

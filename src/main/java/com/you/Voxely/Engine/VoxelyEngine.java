@@ -38,6 +38,15 @@ public abstract class VoxelyEngine {
         renderer.CreateMesh(mesh);
     }
 
+
+    public void CreateChunkMesh(Mesh mesh){
+        renderer.CreateChunkMesh(mesh);
+    }
+
+    public void ClearChunkMeshes(){
+        renderer.ClearChunkMeshes();
+    }
+
     private void Loop(){
         while(!window.IsWindowShouldClose()){
             Time.Update();

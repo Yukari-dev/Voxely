@@ -6,60 +6,96 @@ import java.util.List;
 import com.you.Voxely.Mesh.Mesh;
 
 public class GreedyMeshBuilder {
-    public static  Mesh GenerateGreedyMesh(Chunk chunk, List<Float> verticesList){
+
+    public static Mesh GenerateGreedyMesh(World world, Chunk chunk) {
         List<Float> newVertices = new ArrayList<>();
         List<Integer> newIndices = new ArrayList<>();
         List<Float> newColors = new ArrayList<>();
         int vertexCounter = 0;
-        int targetBlockType = 1;
         float unit = 0.5f;
-        int topY = Chunk.SIZE-1;
-        boolean[][] mask = GenerateMask(chunk, targetBlockType);
 
-        for(int x = 0 ;x < Chunk.SIZE; x++){
-            for(int z = 0; z < Chunk.SIZE; z++){
-                if(!mask[x][z]) continue;
+        int chunkX = (int) chunk.GetPosition().x;
+        int chunkY = (int) chunk.GetPosition().y;
+        int chunkZ = (int) chunk.GetPosition().z;
 
-                int startX = x;
-                int startZ = z;
-                int width = 1;
+        int maskSize = Chunk.SIZE + 1;
 
-                while(startX + width < Chunk.SIZE && mask[startX+width][z]){
-                    width++;
-                }
+        for (int y = 0; y <= Chunk.SIZE; y++) {
+            boolean[][] topMask = new boolean[maskSize][maskSize];
+            boolean[][] bottomMask = new boolean[maskSize][maskSize];
+            int globalY = chunkY + y;
 
-                int length = 1;
-                boolean canExpand = true;
-                while(startZ + length < Chunk.SIZE && canExpand){
-                    for(int w = 0; w < width; w++){
-                        if(!mask[startX+w][startZ+length]){
-                            canExpand = false;
-                            break;
-                        }
+            for (int x = 0; x <= Chunk.SIZE; x++) {
+                for (int z = 0; z <= Chunk.SIZE; z++) {
+                    int globalX = chunkX + x;
+                    int globalZ = chunkZ + z;
+
+                    boolean currentSolid = world.IsBlockSolidAt(globalX, globalY, globalZ);
+                    boolean belowSolid   = world.IsBlockSolidAt(globalX, globalY - 1, globalZ);
+
+                    if (y > 0 && !currentSolid && belowSolid) {
+                        topMask[x][z] = true;
                     }
-                    if(canExpand){
-                        length++;
-                    }
-                }
-
-                int endX = startX+width;
-                int endZ = startZ+length;
-
-                AddVertex(newVertices, startX - unit, topY + unit, startZ - unit); 
-                AddVertex(newVertices, startX - unit, topY + unit, endZ - unit);
-                AddVertex(newVertices, endX - unit,   topY + unit, endZ - unit);
-                AddVertex(newVertices, endX - unit,   topY + unit, startZ - unit);
-
-                AddIndices(newIndices, vertexCounter);
-                AddColors(newColors, new float[]{0, 1, 0});
-                vertexCounter+=4;
-
-                for(int l = 0; l < length; l++){
-                    for(int w = 0; w < width; w++){
-                        mask[startX+w][startZ+l] = false;
+                    if (y < Chunk.SIZE && currentSolid && !belowSolid) {
+                        bottomMask[x][z] = true;
                     }
                 }
             }
+
+            if (y > 0) vertexCounter = ProcessMaskY(topMask, y - 1, unit, true, newVertices, newIndices, newColors, vertexCounter);
+            if (y < Chunk.SIZE) vertexCounter = ProcessMaskY(bottomMask, y, unit, false, newVertices, newIndices, newColors, vertexCounter);
+        }
+
+        for (int z = 0; z <= Chunk.SIZE; z++) {
+            boolean[][] frontMask = new boolean[maskSize][maskSize];
+            boolean[][] backMask = new boolean[maskSize][maskSize];
+            int globalZ = chunkZ + z;
+
+            for (int x = 0; x <= Chunk.SIZE; x++) {
+                for (int y = 0; y <= Chunk.SIZE; y++) {
+                    int globalX = chunkX + x;
+                    int globalY = chunkY + y;
+
+                    boolean currentSolid = world.IsBlockSolidAt(globalX, globalY, globalZ);
+                    boolean behindSolid  = world.IsBlockSolidAt(globalX, globalY, globalZ - 1);
+
+                    if (z > 0 && !currentSolid && behindSolid) {
+                        frontMask[x][y] = true;
+                    }
+                    if (z < Chunk.SIZE && currentSolid && !behindSolid) {
+                        backMask[x][y] = true;
+                    }
+                }
+            }
+
+            if (z > 0) vertexCounter = ProcessMaskZ(frontMask, z - 1, unit, true, newVertices, newIndices, newColors, vertexCounter);
+            if (z < Chunk.SIZE) vertexCounter = ProcessMaskZ(backMask, z, unit, false, newVertices, newIndices, newColors, vertexCounter);
+        }
+
+        for (int x = 0; x <= Chunk.SIZE; x++) {
+            boolean[][] rightMask = new boolean[maskSize][maskSize];
+            boolean[][] leftMask = new boolean[maskSize][maskSize];
+            int globalX = chunkX + x;
+
+            for (int z = 0; z <= Chunk.SIZE; z++) {
+                for (int y = 0; y <= Chunk.SIZE; y++) {
+                    int globalZ = chunkZ + z;
+                    int globalY = chunkY + y;
+
+                    boolean currentSolid = world.IsBlockSolidAt(globalX, globalY, globalZ);
+                    boolean leftSolid    = world.IsBlockSolidAt(globalX - 1, globalY, globalZ);
+
+                    if (x > 0 && !currentSolid && leftSolid) {
+                        rightMask[z][y] = true;
+                    }
+                    if (x < Chunk.SIZE && currentSolid && !leftSolid) {
+                        leftMask[z][y] = true;
+                    }
+                }
+            }
+
+            if (x > 0) vertexCounter = ProcessMaskX(rightMask, x - 1, unit, true, newVertices, newIndices, newColors, vertexCounter);
+            if (x < Chunk.SIZE) vertexCounter = ProcessMaskX(leftMask, x, unit, false, newVertices, newIndices, newColors, vertexCounter);
         }
 
         float[] vertices = ConvertFloatListToArray(newVertices);
@@ -68,16 +104,148 @@ public class GreedyMeshBuilder {
         return new Mesh(chunk.GetPosition(), vertices, indices, colors);
     }
 
-    private static boolean[][] GenerateMask(Chunk chunk, int targetBlockType){
-        boolean[][] mask = new boolean[Chunk.SIZE][Chunk.SIZE];
-        for(int x = 0; x < Chunk.SIZE; x++){
-            for(int z = 0; z < Chunk.SIZE; z++){
-                if(chunk.IsBlockType(x, chunk.SIZE-1, z, targetBlockType)){
-                    mask[x][z] = true;
+    private static int ProcessMaskY(boolean[][] mask, int y, float unit, boolean isTop, List<Float> vertices, List<Integer> indices, List<Float> colors, int vertexCounter) {
+        float[] faceColor = isTop ? new float[]{0, 1, 0} : new float[]{0, 0.5f, 0};
+        float yPos = y + (isTop ? unit : -unit);
+        int limit = mask.length;
+
+        for (int x = 0; x < Chunk.SIZE; x++) {
+            for (int z = 0; z < Chunk.SIZE; z++) {
+                if (!mask[x][z]) continue;
+
+                int width = 1;
+                while (x + width < Chunk.SIZE && mask[x + width][z]) width++;
+
+                int length = 1;
+                boolean canExpand = true;
+                while (z + length < Chunk.SIZE && canExpand) {
+                    for (int w = 0; w < width; w++) {
+                        if (!mask[x + w][z + length]) { canExpand = false; break; }
+                    }
+                    if (canExpand) length++;
                 }
+
+                int endX = x + width;
+                int endZ = z + length;
+
+                if (isTop) {
+                    AddVertex(vertices, x - unit, yPos, z - unit);
+                    AddVertex(vertices, x - unit, yPos, endZ - unit);
+                    AddVertex(vertices, endX - unit, yPos, endZ - unit);
+                    AddVertex(vertices, endX - unit, yPos, z - unit);
+                } else {
+                    AddVertex(vertices, x - unit, yPos, z - unit);
+                    AddVertex(vertices, endX - unit, yPos, z - unit);
+                    AddVertex(vertices, endX - unit, yPos, endZ - unit);
+                    AddVertex(vertices, x - unit, yPos, endZ - unit);
+                }
+
+                AddIndices(indices, vertexCounter);
+                AddColors(colors, faceColor);
+                vertexCounter += 4;
+
+                ClearMaskArea(mask, x, z, width, length);
             }
         }
-        return mask;
+        return vertexCounter;
+    }
+
+    private static int ProcessMaskZ(boolean[][] mask, int z, float unit, boolean isFront, List<Float> vertices, List<Integer> indices, List<Float> colors, int vertexCounter) {
+        float[] faceColor = isFront ? new float[]{0, 0, 1} : new float[]{0, 0, 0.5f};
+        float zPos = z + (isFront ? unit : -unit);
+
+        for (int x = 0; x < Chunk.SIZE; x++) {
+            for (int y = 0; y < Chunk.SIZE; y++) {
+                if (!mask[x][y]) continue;
+
+                int width = 1;
+                while (x + width < Chunk.SIZE && mask[x + width][y]) width++;
+
+                int height = 1;
+                boolean canExpand = true;
+                while (y + height < Chunk.SIZE && canExpand) {
+                    for (int w = 0; w < width; w++) {
+                        if (!mask[x + w][y + height]) { canExpand = false; break; }
+                    }
+                    if (canExpand) height++;
+                }
+
+                int endX = x + width;
+                int endY = y + height;
+
+                if (isFront) {
+                    AddVertex(vertices, endX - unit, y - unit, zPos);
+                    AddVertex(vertices, endX - unit, endY - unit, zPos);
+                    AddVertex(vertices, x - unit, endY - unit, zPos);
+                    AddVertex(vertices, x - unit, y - unit, zPos);
+                } else {
+                    AddVertex(vertices, x - unit, y - unit, zPos);
+                    AddVertex(vertices, x - unit, endY - unit, zPos);
+                    AddVertex(vertices, endX - unit, endY - unit, zPos);
+                    AddVertex(vertices, endX - unit, y - unit, zPos);
+                }
+
+                AddIndices(indices, vertexCounter);
+                AddColors(colors, faceColor);
+                vertexCounter += 4;
+
+                ClearMaskArea(mask, x, y, width, height);
+            }
+        }
+        return vertexCounter;
+    }
+
+    private static int ProcessMaskX(boolean[][] mask, int x, float unit, boolean isRight, List<Float> vertices, List<Integer> indices, List<Float> colors, int vertexCounter) {
+        float[] faceColor = isRight ? new float[]{1, 0, 0} : new float[]{0.5f, 0, 0};
+        float xPos = x + (isRight ? unit : -unit);
+
+        for (int z = 0; z < Chunk.SIZE; z++) {
+            for (int y = 0; y < Chunk.SIZE; y++) {
+                if (!mask[z][y]) continue;
+
+                int length = 1;
+                while (z + length < Chunk.SIZE && mask[z + length][y]) length++;
+
+                int height = 1;
+                boolean canExpand = true;
+                while (y + height < Chunk.SIZE && canExpand) {
+                    for (int l = 0; l < length; l++) {
+                        if (!mask[z + l][y + height]) { canExpand = false; break; }
+                    }
+                    if (canExpand) height++;
+                }
+
+                int endZ = z + length;
+                int endY = y + height;
+
+                if (isRight) {
+                    AddVertex(vertices, xPos, y - unit, endZ - unit);
+                    AddVertex(vertices, xPos, endY - unit, endZ - unit);
+                    AddVertex(vertices, xPos, endY - unit, z - unit);
+                    AddVertex(vertices, xPos, y - unit, z - unit);
+                } else {
+                    AddVertex(vertices, xPos, y - unit, z - unit);
+                    AddVertex(vertices, xPos, endY - unit, z - unit);
+                    AddVertex(vertices, xPos, endY - unit, endZ - unit);
+                    AddVertex(vertices, xPos, y - unit, endZ - unit);
+                }
+
+                AddIndices(indices, vertexCounter);
+                AddColors(colors, faceColor);
+                vertexCounter += 4;
+
+                ClearMaskArea(mask, z, y, length, height);
+            }
+        }
+        return vertexCounter;
+    }
+
+    private static void ClearMaskArea(boolean[][] mask, int startU, int startV, int width, int length) {
+        for (int l = 0; l < length; l++) {
+            for (int w = 0; w < width; w++) {
+                mask[startU + w][startV + l] = false;
+            }
+        }
     }
 
     private static void AddVertex(List<Float> list, float x, float y, float z){

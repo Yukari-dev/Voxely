@@ -12,6 +12,7 @@ import com.you.Voxely.Mesh.MeshCreator.MeshType;
 public class Renderer {
     private Shader shader;
     private List<Mesh> meshes = new ArrayList<>();
+    private List<Mesh> chunkMeshes = new ArrayList<>();
     private UniformBlock uniforms = new UniformBlock();
     private Camera camera;
 
@@ -33,6 +34,21 @@ public class Renderer {
         meshes.add(mesh);
     }
 
+    public void CreateChunkMesh(Mesh mesh){
+        AddChunkMesh(mesh);
+    }
+
+    private void AddChunkMesh(Mesh mesh){
+        chunkMeshes.add(mesh);
+    }
+
+    public void ClearChunkMeshes(){
+        for (Mesh mesh : chunkMeshes) {
+            mesh.CleanUp();
+        }
+        chunkMeshes.clear();
+    }
+
     public void Draw(){
         uniforms.Clear();
         uniforms.Set("projection", camera.GetProjectionMatrix());
@@ -40,6 +56,11 @@ public class Renderer {
         shader.ApplyUniforms(uniforms);
 
         for (Mesh mesh : meshes) {
+            shader.SetMatrix("model", mesh.GetModelMatrix());
+            mesh.Draw();
+        }
+
+        for (Mesh mesh : chunkMeshes) {
             shader.SetMatrix("model", mesh.GetModelMatrix());
             mesh.Draw();
         }

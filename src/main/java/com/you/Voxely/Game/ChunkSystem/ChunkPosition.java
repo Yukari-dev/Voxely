@@ -13,7 +13,7 @@ public class ChunkPosition {
 
     @Override
     public boolean equals(Object o){
-        if(this == o) return false;
+        if(this == o) return true;
         if(!(o instanceof ChunkPosition)) return false;
         ChunkPosition p = (ChunkPosition)o;
         return this.x == p.x && this.y == p.y && this.z == p.z;

@@ -11,14 +11,17 @@ public class World {
     private int renderDistance = 1;
 
     public void GenerateTerrain(){
-
         for(int x = -renderDistance; x <= renderDistance; x++){
             for(int z = -renderDistance; z <= renderDistance; z++){
-                ChunkPosition pos = new ChunkPosition(x*Chunk.SIZE, 0, z*Chunk.SIZE);
+                ChunkPosition pos = new ChunkPosition(x, 0, z);
                 Vector3f worldRealPos = new Vector3f(x*Chunk.SIZE, 0, z*Chunk.SIZE);
                 activeChunks.put(pos, new Chunk(worldRealPos));
             }
         }
+    }
+
+    public void ClearActiveChunks() {
+        activeChunks.clear();
     }
 
     public boolean IsBlockSolidAt(int globalX, int globalY, int globalZ) {

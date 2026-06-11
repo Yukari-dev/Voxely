@@ -75,4 +75,8 @@ public class Mesh {
         return buf;
     }
 
+    public void CleanUp(){
+        glDeleteBuffers(new int[]{vao, posVBO, colVBO, ebo});
+    }
+
 }
