@@ -14,7 +14,6 @@ public class World {
 
     private int renderDistance = 1;
 
-
     public void GenerateTerrain(){
         for(int x = -renderDistance; x <= renderDistance; x++){
             for(int z = -renderDistance; z <= renderDistance; z++){
@@ -24,7 +23,6 @@ public class World {
             }
         }
         for(Chunk chunk : activeChunks.values()){
-            chunk.ClearBlocks();
             terrainGenerator.GenerateChunkTerrain(chunk);
         }
     }

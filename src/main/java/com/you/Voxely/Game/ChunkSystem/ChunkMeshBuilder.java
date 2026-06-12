@@ -3,6 +3,8 @@ package com.you.Voxely.Game.ChunkSystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.you.Voxely.Game.Blocks.BlockDefinition;
+import com.you.Voxely.Game.Blocks.BlockRegistry;
 import com.you.Voxely.Game.Textures.Texture;
 import com.you.Voxely.Game.Textures.TextureAtlasRegistery;
 import com.you.Voxely.Mesh.Mesh;
@@ -20,13 +22,16 @@ public class ChunkMeshBuilder {
         for(int x = 0; x < Chunk.SIZE; x++){
             for(int z = 0; z < Chunk.SIZE; z++){
                 for(int y = 0; y < Chunk.HEIGHT; y++){
+                    short blockId = chunk.GetBlockType(x, y, z);
+                    if(blockId == 0) continue;
+
+                    BlockDefinition currentBlock = BlockRegistry.GetBlock(blockId);
+                    if(currentBlock == null) continue;
                     
                     int globalX = (int)chunk.GetPosition().x + x;
                     int globalY = (int)chunk.GetPosition().y + y;
                     int globalZ = (int)chunk.GetPosition().z + z;
 
-                    if(!world.IsBlockSolidAt(globalX, globalY, globalZ)) continue;
-                    
                     if(!world.IsBlockSolidAt(globalX, globalY, globalZ + 1)){
                         AddVertex(verticesList, x + unit, y + unit, z + unit);
                         AddVertex(verticesList, x + unit, y - unit, z + unit);
@@ -34,7 +39,7 @@ public class ChunkMeshBuilder {
                         AddVertex(verticesList, x - unit, y + unit, z + unit);
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 0, 1});
-                        AddUVs(UVsList, "grass");
+                        AddUVs(UVsList, currentBlock.GetTextureForFace("side"));
                         AddNormals(normalsList, new float[]{0, 0, 1});
                         vertexCounter += 4;
                     }
@@ -46,7 +51,7 @@ public class ChunkMeshBuilder {
                         AddVertex(verticesList, x - unit, y + unit, z - unit);
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 0, 0.5f});
-                        AddUVs(UVsList, "grass");
+                        AddUVs(UVsList, currentBlock.GetTextureForFace("side"));
                         AddNormals(normalsList, new float[]{0, 0, -1.0f});
                         vertexCounter += 4;
                     }
@@ -58,7 +63,7 @@ public class ChunkMeshBuilder {
                         AddVertex(verticesList, x + unit, y + unit, z - unit);
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{1, 0, 0});
-                        AddUVs(UVsList, "grass");
+                        AddUVs(UVsList, currentBlock.GetTextureForFace("side"));
                         AddNormals(normalsList, new float[]{1.0f, 0, 0});
                         vertexCounter += 4;
                     }
@@ -70,7 +75,7 @@ public class ChunkMeshBuilder {
                         AddVertex(verticesList, x - unit, y + unit, z - unit);
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0.5f, 0, 0});
-                        AddUVs(UVsList, "grass");
+                        AddUVs(UVsList, currentBlock.GetTextureForFace("side"));
                         AddNormals(normalsList, new float[]{-1.0f, 0, 0});
                         vertexCounter += 4;
                     }
@@ -82,7 +87,7 @@ public class ChunkMeshBuilder {
                         AddVertex(verticesList, x + unit, y + unit, z - unit);
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 1, 0});
-                        AddUVs(UVsList, "grass");
+                        AddUVs(UVsList, currentBlock.GetTextureForFace("top"));
                         AddNormals(normalsList, new float[]{0, 1.0f, 0});
                         vertexCounter += 4;
                     }
@@ -94,7 +99,7 @@ public class ChunkMeshBuilder {
                         AddVertex(verticesList, x + unit, y - unit, z - unit);
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 0.5f, 0});
-                        AddUVs(UVsList, "grass");
+                        AddUVs(UVsList, currentBlock.GetTextureForFace("bottom"));
                         AddNormals(normalsList, new float[]{0, -1.0f, 0});
                         vertexCounter += 4;
                     }

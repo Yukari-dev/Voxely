@@ -3,6 +3,7 @@ package com.you.Voxely.Game.TerrainGeneration;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.you.Voxely.Game.Blocks.BlockRegistry;
 import com.you.Voxely.Game.ChunkSystem.Chunk;
 
 public class TerrainGenerator {
@@ -25,7 +26,7 @@ public class TerrainGenerator {
     }
 
     public int CalculateSurfaceHeight(float globalX, float globalZ){
-        float finalHeight = 0;
+        float finalHeight = 60;
         for(NoiseLayer layer : layers){
             if(layer.enabled){
                 finalHeight += layer.GetNoise(globalX, globalZ);
@@ -39,6 +40,9 @@ public class TerrainGenerator {
         int chunkY = (int)chunk.GetPosition().y;
         int chunkZ = (int)chunk.GetPosition().z;
 
+        short grassId = (short)BlockRegistry.GetBlock(1).id;
+        short dirtId = (short)BlockRegistry.GetBlock(2).id;
+
         for(int x = 0; x < Chunk.SIZE; x++){
             for(int z = 0; z < Chunk.SIZE; z++){
                 int globalX = chunkX+x;
@@ -47,11 +51,14 @@ public class TerrainGenerator {
                 int surfaceHeight = CalculateSurfaceHeight(globalX, globalZ);
 
                 for(int y = 0; y < Chunk.HEIGHT; y++){
-                    int globalY = chunkY+y;
-                    if(globalY <= surfaceHeight){
-                        chunk.SetBlockType(x, y, z, 1);
-                    } else{
-                        chunk.SetBlockType(x, y, z, 0);
+                    if (y > surfaceHeight) {
+                        chunk.SetBlockType(x, y, z, (short)0);
+                    } else if (y == surfaceHeight) {
+                        chunk.SetBlockType(x, y, z, grassId);
+                    } else if (y >= surfaceHeight - 3) {
+                        chunk.SetBlockType(x, y, z, dirtId);
+                    } else {
+                        chunk.SetBlockType(x, y, z, dirtId); 
                     }
                 }
             }

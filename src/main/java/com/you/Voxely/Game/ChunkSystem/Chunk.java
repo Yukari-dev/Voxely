@@ -6,36 +6,28 @@ public class Chunk {
     public static final int SIZE = 16;
     public static final int HEIGHT = 256;
     
-    private int[][][] blocks = new int[SIZE][HEIGHT][SIZE];
+    private final short[] blocks;
 
     private Vector3f position;
 
     public Chunk(Vector3f position){
         this.position = position;
-        GenerateDummyTerrain();
+        blocks = new short[SIZE*HEIGHT*SIZE];
     }
 
-    private void GenerateDummyTerrain(){
-        for(int x = 0; x < SIZE; x++){
-            for(int z = 0; z < SIZE; z++){
-                for(int y = 0; y < HEIGHT; y++){
-                    blocks[x][y][z] = 1;
-                }
-            }
-        }
+    public void SetBlockType(int x, int y, int z, short blockType){
+        blocks[GetIndex(x, y, z)] = blockType;
     }
 
-    public void ClearBlocks(){
-        blocks = new int[SIZE][HEIGHT][SIZE];
-    }
 
-    public void SetBlockType(int x, int y, int z, int blockType){
-        blocks[x][y][z] = blockType;
+    public short GetBlockType(int x, int y, int z){
+        if(IsBlockOutOfBondaries(x, y, z)) return 0;
+        return blocks[GetIndex(x, y, z)];
     }
 
     public boolean IsSolid(int x, int y, int z){
         if(IsBlockOutOfBondaries(x, y, z)) return false;
-        return blocks[x][y][z] != 0;
+        return blocks[GetIndex(x, y, z)] != 0;
     }
 
     private boolean IsBlockOutOfBondaries(int x, int y, int z){
@@ -48,6 +40,10 @@ public class Chunk {
 
     public boolean IsBlockType(int x, int y, int z, int type){
         if(IsBlockOutOfBondaries(x, y, z)) return false;
-        return blocks[x][y][z] == type;
+        return blocks[GetIndex(x, y, z)] == type;
+    }
+
+    private int GetIndex(int x, int y, int z){
+        return (x*HEIGHT*SIZE)+(y*SIZE)+z;
     }
 }

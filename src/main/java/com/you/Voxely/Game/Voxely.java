@@ -3,6 +3,7 @@ package com.you.Voxely.Game;
 import java.util.List;
 
 import com.you.Voxely.Engine.VoxelyEngine;
+import com.you.Voxely.Game.Blocks.BlockRegistry;
 import com.you.Voxely.Game.ChunkSystem.Chunk;
 import com.you.Voxely.Game.ChunkSystem.ChunkMeshBuilder;
 import com.you.Voxely.Game.ChunkSystem.World;
@@ -26,6 +27,7 @@ public class Voxely extends VoxelyEngine {
     @Override
     protected void OnStart() {
         TextureAtlasRegistery.LoadTextures();
+        BlockRegistry.LoadDefinitions();
         world = new World();
         world.SetRenderDistance(4);
 
