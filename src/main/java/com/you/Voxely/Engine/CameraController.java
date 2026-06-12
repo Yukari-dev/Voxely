@@ -47,7 +47,7 @@ public class CameraController {
         deltaTime   = now - lastTime;
         lastTime    = now;
 
-        float actualSpeed = Input.IsKeyJustPressed(GLFW_KEY_LEFT_SHIFT) ? runSpeed : speed;
+        float actualSpeed = Input.IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ? runSpeed : speed;
 
         float step  = actualSpeed * deltaTime;
 

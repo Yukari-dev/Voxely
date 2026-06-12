@@ -20,7 +20,7 @@ public class GreedyMeshBuilder {
 
         int maskSize = Chunk.SIZE + 1;
 
-        for (int y = 0; y <= Chunk.SIZE; y++) {
+        for (int y = 0; y <= Chunk.HEIGHT; y++) {
             boolean[][] topMask = new boolean[maskSize][maskSize];
             boolean[][] bottomMask = new boolean[maskSize][maskSize];
             int globalY = chunkY + y;
@@ -36,14 +36,14 @@ public class GreedyMeshBuilder {
                     if (y > 0 && !currentSolid && belowSolid) {
                         topMask[x][z] = true;
                     }
-                    if (y < Chunk.SIZE && currentSolid && !belowSolid) {
+                    if (y < Chunk.HEIGHT && currentSolid && !belowSolid) {
                         bottomMask[x][z] = true;
                     }
                 }
             }
 
             if (y > 0) vertexCounter = ProcessMaskY(topMask, y - 1, unit, true, newVertices, newIndices, newColors, vertexCounter);
-            if (y < Chunk.SIZE) vertexCounter = ProcessMaskY(bottomMask, y, unit, false, newVertices, newIndices, newColors, vertexCounter);
+            if (y < Chunk.HEIGHT) vertexCounter = ProcessMaskY(bottomMask, y, unit, false, newVertices, newIndices, newColors, vertexCounter);
         }
 
         for (int z = 0; z <= Chunk.SIZE; z++) {
@@ -52,7 +52,7 @@ public class GreedyMeshBuilder {
             int globalZ = chunkZ + z;
 
             for (int x = 0; x <= Chunk.SIZE; x++) {
-                for (int y = 0; y <= Chunk.SIZE; y++) {
+                for (int y = 0; y <= Chunk.HEIGHT; y++) {
                     int globalX = chunkX + x;
                     int globalY = chunkY + y;
 
@@ -78,7 +78,7 @@ public class GreedyMeshBuilder {
             int globalX = chunkX + x;
 
             for (int z = 0; z <= Chunk.SIZE; z++) {
-                for (int y = 0; y <= Chunk.SIZE; y++) {
+                for (int y = 0; y <= Chunk.HEIGHT; y++) {
                     int globalZ = chunkZ + z;
                     int globalY = chunkY + y;
 
@@ -155,7 +155,7 @@ public class GreedyMeshBuilder {
         float zPos = z + (isFront ? unit : -unit);
 
         for (int x = 0; x < Chunk.SIZE; x++) {
-            for (int y = 0; y < Chunk.SIZE; y++) {
+            for (int y = 0; y < Chunk.HEIGHT; y++) {
                 if (!mask[x][y]) continue;
 
                 int width = 1;
@@ -200,7 +200,7 @@ public class GreedyMeshBuilder {
         float xPos = x + (isRight ? unit : -unit);
 
         for (int z = 0; z < Chunk.SIZE; z++) {
-            for (int y = 0; y < Chunk.SIZE; y++) {
+            for (int y = 0; y < Chunk.HEIGHT; y++) {
                 if (!mask[z][y]) continue;
 
                 int length = 1;
@@ -208,7 +208,7 @@ public class GreedyMeshBuilder {
 
                 int height = 1;
                 boolean canExpand = true;
-                while (y + height < Chunk.SIZE && canExpand) {
+                while (y + height < Chunk.HEIGHT && canExpand) {
                     for (int l = 0; l < length; l++) {
                         if (!mask[z + l][y + height]) { canExpand = false; break; }
                     }

@@ -10,6 +10,12 @@
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/GreedyMeshBuilder.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/MeshResultData.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/World.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/TerrainGeneration/NoiseLayer.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/TerrainGeneration/TerrainGenerator.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Textures/Texture.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Textures/TextureAtlas.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Textures/TextureAtlasRegistery.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Textures/TextureLoader.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Voxely.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/VoxelyUI.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Input/Input.java

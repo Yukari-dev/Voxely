@@ -4,8 +4,9 @@ import org.joml.Vector3f;
 
 public class Chunk {
     public static final int SIZE = 16;
+    public static final int HEIGHT = 256;
     
-    private byte[][][] blocks = new byte[SIZE][SIZE][SIZE];
+    private int[][][] blocks = new int[SIZE][HEIGHT][SIZE];
 
     private Vector3f position;
 
@@ -17,11 +18,19 @@ public class Chunk {
     private void GenerateDummyTerrain(){
         for(int x = 0; x < SIZE; x++){
             for(int z = 0; z < SIZE; z++){
-                for(int y = 0; y < SIZE; y++){
+                for(int y = 0; y < HEIGHT; y++){
                     blocks[x][y][z] = 1;
                 }
             }
         }
+    }
+
+    public void ClearBlocks(){
+        blocks = new int[SIZE][HEIGHT][SIZE];
+    }
+
+    public void SetBlockType(int x, int y, int z, int blockType){
+        blocks[x][y][z] = blockType;
     }
 
     public boolean IsSolid(int x, int y, int z){
@@ -30,7 +39,7 @@ public class Chunk {
     }
 
     private boolean IsBlockOutOfBondaries(int x, int y, int z){
-        return x < 0 || x>=SIZE || y < 0 || y>=SIZE || z < 0 || z>=SIZE;
+        return x < 0 || x>=SIZE || y < 0 || y>=HEIGHT || z < 0 || z>=SIZE;
     }
 
     public Vector3f GetPosition(){

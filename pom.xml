@@ -12,13 +12,28 @@
         <profile>
             <id>linux</id>
             <activation>
-                <os>
-                    <family>unix</family>
-                </os>
+                <os><family>unix</family></os>
             </activation>
-
             <properties>
                 <lwjgl.natives>natives-linux</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os><family>windows</family></os>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-windows</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
+            <id>macos</id>
+            <activation>
+                <os><family>mac</family></os>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-macos</lwjgl.natives>
             </properties>
         </profile>
     </profiles>
@@ -75,6 +90,18 @@
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-opengl</artifactId>
+            <classifier>${lwjgl.natives}</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
             <classifier>${lwjgl.natives}</classifier>
         </dependency>
 

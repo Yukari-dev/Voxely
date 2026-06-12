@@ -57,12 +57,12 @@ public class Renderer {
 
         for (Mesh mesh : meshes) {
             shader.SetMatrix("model", mesh.GetModelMatrix());
-            mesh.Draw();
+            mesh.Draw(shader);
         }
 
         for (Mesh mesh : chunkMeshes) {
             shader.SetMatrix("model", mesh.GetModelMatrix());
-            mesh.Draw();
+            mesh.Draw(shader);
         }
         shader.UnUse();
     }

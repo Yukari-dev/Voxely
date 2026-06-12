@@ -9,6 +9,7 @@ import com.you.Voxely.Mesh.Mesh;
 import com.you.Voxely.Mesh.MeshCreator;
 import com.you.Voxely.Renderer.Renderer;
 import com.you.Voxely.Time.Time;
+import static org.lwjgl.opengl.GL11.*;
 
 public abstract class VoxelyEngine {
     private Window window;
@@ -18,7 +19,7 @@ public abstract class VoxelyEngine {
 
     public void StartEngine(int width, int height, String title){
         window = new Window(width, height, title);
-        camera = new Camera(window, new Vector3f(0), (float)width/(float)height);
+        camera = new Camera(window, new Vector3f(0, 40f, 0), (float)width/(float)height);
         renderer = new Renderer(camera);
         Input.SetWindow(window.GetWindow());
         DebugControls.SetWindow(window);
