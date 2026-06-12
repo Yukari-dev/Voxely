@@ -73,9 +73,7 @@ public class TextureAtlasRegistery {
     }
 
     public static TextureUVInfo GetUVInfo(String textureName) {
-        System.out.println(atlasCoordinates.containsKey(textureName));
         TextureUVInfo UVInfo = atlasCoordinates.getOrDefault(textureName, atlasCoordinates.get("UNKNOWN"));
-        System.out.printf("uMin: %f, uMax: %f, vMin: %f, vMax: %f \n", UVInfo.uMin, UVInfo.uMax, UVInfo.vMin, UVInfo.vMax);
         return UVInfo;
     }
 

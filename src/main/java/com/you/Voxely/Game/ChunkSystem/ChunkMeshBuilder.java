@@ -13,6 +13,7 @@ public class ChunkMeshBuilder {
         List<Integer> indicesList = new ArrayList<>();
         List<Float> colorsList = new ArrayList<>();
         List<Float> UVsList = new ArrayList<>();
+        List<Float> normalsList = new ArrayList<>();
 
         float unit = 0.5f;
         int vertexCounter = 0;
@@ -34,6 +35,7 @@ public class ChunkMeshBuilder {
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 0, 1});
                         AddUVs(UVsList, "grass");
+                        AddNormals(normalsList, new float[]{0, 0, 1});
                         vertexCounter += 4;
                     }
 
@@ -45,6 +47,7 @@ public class ChunkMeshBuilder {
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 0, 0.5f});
                         AddUVs(UVsList, "grass");
+                        AddNormals(normalsList, new float[]{0, 0, -1.0f});
                         vertexCounter += 4;
                     }
 
@@ -56,6 +59,7 @@ public class ChunkMeshBuilder {
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{1, 0, 0});
                         AddUVs(UVsList, "grass");
+                        AddNormals(normalsList, new float[]{1.0f, 0, 0});
                         vertexCounter += 4;
                     }
 
@@ -67,6 +71,7 @@ public class ChunkMeshBuilder {
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0.5f, 0, 0});
                         AddUVs(UVsList, "grass");
+                        AddNormals(normalsList, new float[]{-1.0f, 0, 0});
                         vertexCounter += 4;
                     }
 
@@ -78,6 +83,7 @@ public class ChunkMeshBuilder {
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 1, 0});
                         AddUVs(UVsList, "grass");
+                        AddNormals(normalsList, new float[]{0, 1.0f, 0});
                         vertexCounter += 4;
                     }
 
@@ -89,6 +95,7 @@ public class ChunkMeshBuilder {
                         AddIndices(indicesList, vertexCounter);
                         AddColors(colorsList, new float[]{0, 0.5f, 0});
                         AddUVs(UVsList, "grass");
+                        AddNormals(normalsList, new float[]{0, -1.0f, 0});
                         vertexCounter += 4;
                     }
                 }
@@ -99,8 +106,9 @@ public class ChunkMeshBuilder {
         int[] finalIndices = ConvertIntListToArray(indicesList);
         float[] finalColors = ConvertFloatListToArray(colorsList);
         float[] finalUVs = ConvertFloatListToArray(UVsList);
+        float[] finalNormals = ConvertFloatListToArray(normalsList);
         Texture atlasTexture = new Texture("Atlas", TextureAtlasRegistery.atlas.id, TextureAtlasRegistery.atlas.width, TextureAtlasRegistery.atlas.height);
-        return new Mesh(chunk.GetPosition(), finalVertices, finalIndices, finalColors, finalUVs, atlasTexture);
+        return new Mesh(chunk.GetPosition(), finalVertices, finalIndices, finalColors, finalUVs, finalNormals, atlasTexture);
     }
 
     private static void AddVertex(List<Float> list, float x, float y, float z){
@@ -124,6 +132,12 @@ public class ChunkMeshBuilder {
     private static void AddColors(List<Float> list, float[] rgb) {
         for(int i = 0; i < 4; i++) {
             list.add(rgb[0]); list.add(rgb[1]); list.add(rgb[2]);
+        }
+    }
+
+    private static void AddNormals(List<Float> list, float[] normals) {
+        for(int i = 0; i < 4; i++) {
+            list.add(normals[0]); list.add(normals[1]); list.add(normals[2]);
         }
     }
 

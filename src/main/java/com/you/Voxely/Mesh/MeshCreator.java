@@ -2,6 +2,8 @@ package com.you.Voxely.Mesh;
 
 import org.joml.Vector3f;
 
+// NOT WORKING, ALSO, NOT NEEDED.
+
 public class MeshCreator {
     public static enum MeshType{
         CUBE
@@ -156,7 +158,8 @@ public class MeshCreator {
             indices[iOffset+4] = vertexStartIndex+2;
             indices[iOffset+5] = vertexStartIndex+3;
         }
-        return new Mesh(position, vertices, indices, colors);
+        // return new Mesh(position, vertices, indices, colors);
+        return null;
     }
 
     public static Mesh CreateUnitCube(Vector3f position, int faces, float[] color){

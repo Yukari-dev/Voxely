@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import static org.lwjgl.opengl.GL46.*;
 import org.lwjgl.system.MemoryStack;
+
+import com.you.Voxely.Game.Lightning.LightEnvironment;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -116,6 +119,14 @@ public class Shader{
         }
     }
 
+    public void UploadLighting(LightEnvironment env) {
+        SetVec3("sunDirection", env.sunDirection);
+        SetVec3("sunColor", env.sunColor);
+        SetFloat("sunIntensity", env.sunIntensity);
+        
+        SetVec3("ambientColor", env.ambientColor);
+        SetFloat("ambientIntensity", env.ambientIntensity);
+    }
 
     public int GetLocation(String name){
         return glGetUniformLocation(programID, name);

@@ -6,11 +6,13 @@ import java.util.List;
 import org.joml.Vector3f;
 
 import com.you.Voxely.Engine.Camera;
+import com.you.Voxely.Game.Lightning.LightEnvironment;
 import com.you.Voxely.Mesh.*;
 import com.you.Voxely.Mesh.MeshCreator.MeshType;
 
 public class Renderer {
     private Shader shader;
+    private LightEnvironment lightEnvironment = LightEnvironment.createNoonPreset();
     private List<Mesh> meshes = new ArrayList<>();
     private List<Mesh> chunkMeshes = new ArrayList<>();
     private UniformBlock uniforms = new UniformBlock();
@@ -54,6 +56,7 @@ public class Renderer {
         uniforms.Set("projection", camera.GetProjectionMatrix());
         uniforms.Set("view", camera.GetViewMatrix());
         shader.ApplyUniforms(uniforms);
+        shader.UploadLighting(lightEnvironment);
 
         for (Mesh mesh : meshes) {
             shader.SetMatrix("model", mesh.GetModelMatrix());

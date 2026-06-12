@@ -13,7 +13,7 @@ import com.you.Voxely.Renderer.Shader;
 import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {
-    private int vao, posVBO, colVBO, UVsVBO, ebo;
+    private int vao, posVBO, colVBO, UVsVBO, normVBO, ebo;
 
     private Vector3f position;
 
@@ -21,15 +21,17 @@ public class Mesh {
     private int[] indices;
     private float[] colors;
     private float[] uvs;
+    private float[] normals;
 
     private Texture texture;
 
-    public Mesh(Vector3f position, float[] vertices, int[] indices, float[] colors, float[] uvs, Texture texture){
+    public Mesh(Vector3f position, float[] vertices, int[] indices, float[] colors, float[] uvs, float[] normals, Texture texture){
         this.position = position;
         this.vertices = vertices;
         this.indices = indices;
         this.colors = colors;
         this.uvs = uvs;
+        this.normals = normals;
         this.texture = texture;
         Construct();
     }
@@ -48,6 +50,10 @@ public class Mesh {
         colVBO = CreateBuffer(GL_ARRAY_BUFFER, colors);
         VertexLayout colLayout = new VertexLayout().SetStartLocation(2).Add(VertexLayout.AttributeType.COLOR);
         colLayout.Apply();
+
+        normVBO = CreateBuffer(GL_ARRAY_BUFFER, normals);
+        VertexLayout normLayout = new VertexLayout().SetStartLocation(3).Add(VertexLayout.AttributeType.NORMAL);
+        normLayout.Apply();
 
         ebo = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, indices);
 

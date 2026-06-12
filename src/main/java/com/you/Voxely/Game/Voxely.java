@@ -101,6 +101,12 @@ public class Voxely extends VoxelyEngine {
             pendingRegeneration = true;
         }
 
+        ImGui.separator();
+
+        if(ImGui.checkbox("Sync", syncEnability)){
+            GetWindow().SetSyncEnablility(syncEnability.get());
+        }
+
         ImGui.end();
     }
 }

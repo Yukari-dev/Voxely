@@ -3,7 +3,11 @@ package com.you.Voxely.Game.ChunkSystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.you.Voxely.Game.Textures.Texture;
+import com.you.Voxely.Game.Textures.TextureAtlasRegistery;
 import com.you.Voxely.Mesh.Mesh;
+
+// ---- NOT WORKING ----
 
 public class GreedyMeshBuilder {
 
@@ -11,6 +15,7 @@ public class GreedyMeshBuilder {
         List<Float> newVertices = new ArrayList<>();
         List<Integer> newIndices = new ArrayList<>();
         List<Float> newColors = new ArrayList<>();
+        List<Float> newUVs = new ArrayList<>();
         int vertexCounter = 0;
         float unit = 0.5f;
 
@@ -42,8 +47,8 @@ public class GreedyMeshBuilder {
                 }
             }
 
-            if (y > 0) vertexCounter = ProcessMaskY(topMask, y - 1, unit, true, newVertices, newIndices, newColors, vertexCounter);
-            if (y < Chunk.HEIGHT) vertexCounter = ProcessMaskY(bottomMask, y, unit, false, newVertices, newIndices, newColors, vertexCounter);
+            // if (y > 0) vertexCounter = ProcessMaskY(topMask, y - 1, unit, true, newVertices, newIndices, newColors, vertexCounter);
+            // if (y < Chunk.HEIGHT) vertexCounter = ProcessMaskY(bottomMask, y, unit, false, newVertices, newIndices, newColors, vertexCounter);
         }
 
         for (int z = 0; z <= Chunk.SIZE; z++) {
@@ -101,10 +106,13 @@ public class GreedyMeshBuilder {
         float[] vertices = ConvertFloatListToArray(newVertices);
         int[] indices = ConvertIntListToArray(newIndices);
         float[] colors = ConvertFloatListToArray(newColors);
-        return new Mesh(chunk.GetPosition(), vertices, indices, colors);
+        float[] UVs = ConvertFloatListToArray(newUVs);
+        Texture atlasTexture = new Texture("Atlas", TextureAtlasRegistery.atlas.id, TextureAtlasRegistery.atlas.width, TextureAtlasRegistery.atlas.height);
+        // return new Mesh(chunk.GetPosition(), vertices, indices, colors, UVs, atlasTexture);
+        return null;
     }
 
-    private static int ProcessMaskY(boolean[][] mask, int y, float unit, boolean isTop, List<Float> vertices, List<Integer> indices, List<Float> colors, int vertexCounter) {
+    private static int ProcessMaskY(boolean[][] mask, int y, float unit, boolean isTop, List<Float> vertices, List<Integer> indices, List<Float> colors, List<Float> UVs, int vertexCounter) {
         float[] faceColor = isTop ? new float[]{0, 1, 0} : new float[]{0, 0.5f, 0};
         float yPos = y + (isTop ? unit : -unit);
         int limit = mask.length;
