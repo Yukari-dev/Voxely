@@ -119,13 +119,13 @@ public class Shader{
         }
     }
 
-    public void UploadLighting(LightEnvironment env) {
-        SetVec3("sunDirection", env.sunDirection);
-        SetVec3("sunColor", env.sunColor);
-        SetFloat("sunIntensity", env.sunIntensity);
+    public void UploadLighting() {
+        SetVec3("sunDirection", LightEnvironment.sunDirection);
+        SetVec3("sunColor", LightEnvironment.sunColor);
+        SetFloat("sunIntensity", LightEnvironment.sunIntensity);
         
-        SetVec3("ambientColor", env.ambientColor);
-        SetFloat("ambientIntensity", env.ambientIntensity);
+        SetVec3("ambientColor", LightEnvironment.ambientColor);
+        SetFloat("ambientIntensity", LightEnvironment.ambientIntensity);
     }
 
     public int GetLocation(String name){

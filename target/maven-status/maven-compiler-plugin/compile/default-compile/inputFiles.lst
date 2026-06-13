@@ -12,6 +12,11 @@
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/GreedyMeshBuilder.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/MeshResultData.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/ChunkSystem/World.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/GUI/GuiWindow.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/GUI/ImGuiManager.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/GUI/LightningSettingsWindow.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/GUI/PerformanceSettingsWindow.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/GUI/TerrainSettingsWindow.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Lightning/LightEnvironment.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/TerrainGeneration/NoiseLayer.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/TerrainGeneration/TerrainGenerator.java

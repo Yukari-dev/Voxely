@@ -4,28 +4,40 @@ import org.joml.Vector3f;
 
 import com.you.Voxely.Debug.DebugControls;
 import com.you.Voxely.Game.VoxelyUI;
+import com.you.Voxely.Game.ChunkSystem.World;
+import com.you.Voxely.Game.GUI.ImGuiManager;
+import com.you.Voxely.Game.GUI.LightningSettingsWindow;
+import com.you.Voxely.Game.GUI.PerformanceSettingsWindow;
+import com.you.Voxely.Game.GUI.TerrainSettingsWindow;
 import com.you.Voxely.Input.Input;
 import com.you.Voxely.Mesh.Mesh;
 import com.you.Voxely.Mesh.MeshCreator;
 import com.you.Voxely.Renderer.Renderer;
 import com.you.Voxely.Time.Time;
-import static org.lwjgl.opengl.GL11.*;
 
 public abstract class VoxelyEngine {
     private Window window;
     private Renderer renderer;
+    private World world;
     private Camera camera;
     private VoxelyUI gui;
+    private ImGuiManager guiManager;
 
     public void StartEngine(int width, int height, String title){
         window = new Window(width, height, title);
         camera = new Camera(window, new Vector3f(0, 40f, 0), (float)width/(float)height);
         renderer = new Renderer(camera);
+        world = new World();
+        world.SetRenderDistance(4);
         Input.SetWindow(window.GetWindow());
         DebugControls.SetWindow(window);
 
         gui = new VoxelyUI();
         gui.Initialize(window.GetWindow());
+        guiManager = new ImGuiManager();
+        guiManager.RegisterWindow(new PerformanceSettingsWindow(window));
+        guiManager.RegisterWindow(new LightningSettingsWindow());
+        guiManager.RegisterWindow(new TerrainSettingsWindow(world));
 
         OnStart();
         Loop();
@@ -38,7 +50,6 @@ public abstract class VoxelyEngine {
     public void CreateMesh(Mesh mesh){
         renderer.CreateMesh(mesh);
     }
-
 
     public void CreateChunkMesh(Mesh mesh){
         renderer.CreateChunkMesh(mesh);
@@ -65,7 +76,7 @@ public abstract class VoxelyEngine {
 
             DebugControls.SetPolygonMode(false);
             gui.StartFrame();
-            OnImGuiRender();;
+            guiManager.RenderAll();
             gui.EndFrame();
 
             window.SwapAndPoll();
@@ -74,6 +85,10 @@ public abstract class VoxelyEngine {
 
     public Window GetWindow(){
         return window;
+    }
+
+    public World GetWorld(){
+        return world;
     }
     
     protected abstract void OnStart();

@@ -12,7 +12,6 @@ import com.you.Voxely.Mesh.MeshCreator.MeshType;
 
 public class Renderer {
     private Shader shader;
-    private LightEnvironment lightEnvironment = LightEnvironment.createNoonPreset();
     private List<Mesh> meshes = new ArrayList<>();
     private List<Mesh> chunkMeshes = new ArrayList<>();
     private UniformBlock uniforms = new UniformBlock();
@@ -21,6 +20,7 @@ public class Renderer {
     public Renderer(Camera camera){
         shader = new Shader("DefaultVert.glsl", "DefaultFrag.glsl");
         this.camera = camera;
+        LightEnvironment.CreateNoonPreset();
     }
 
     public void CreateMesh(MeshType meshType, int faceCount, Vector3f position, float[] color){
@@ -56,7 +56,7 @@ public class Renderer {
         uniforms.Set("projection", camera.GetProjectionMatrix());
         uniforms.Set("view", camera.GetViewMatrix());
         shader.ApplyUniforms(uniforms);
-        shader.UploadLighting(lightEnvironment);
+        shader.UploadLighting();
 
         for (Mesh mesh : meshes) {
             shader.SetMatrix("model", mesh.GetModelMatrix());
