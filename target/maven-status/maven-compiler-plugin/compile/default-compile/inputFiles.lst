@@ -18,6 +18,7 @@
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/GUI/PerformanceSettingsWindow.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/GUI/TerrainSettingsWindow.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Lightning/LightEnvironment.java
+/home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/TerrainGeneration/FastNoiseLite.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/TerrainGeneration/NoiseLayer.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/TerrainGeneration/TerrainGenerator.java
 /home/yukari/programming/OPENGL/Voxely/src/main/java/com/you/Voxely/Game/Textures/Texture.java
