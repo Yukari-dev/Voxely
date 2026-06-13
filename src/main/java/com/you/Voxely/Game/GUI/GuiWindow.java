@@ -4,4 +4,6 @@ public interface GuiWindow {
     String GetName();
 
     void Render();
+    void Save();
+    void Load();
 }

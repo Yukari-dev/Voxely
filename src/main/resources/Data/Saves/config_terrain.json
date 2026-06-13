@@ -1,0 +1,44 @@
+{
+  "renderDistance": 3,
+  "layers": [
+    {
+      "name": "Base Landscape",
+      "enabled": true,
+      "seed": 3639,
+      "frequency": 0.013,
+      "amplitude": 10.911,
+      "offset": 60.0,
+      "noiseType": 1,
+      "fractalType": 1,
+      "octaves": 4,
+      "lacunarity": 1.856,
+      "gain": 0.046
+    },
+    {
+      "name": "Rough Mountains",
+      "enabled": true,
+      "seed": 0,
+      "frequency": 0.001,
+      "amplitude": 70.925,
+      "offset": 7.41,
+      "noiseType": 1,
+      "fractalType": 2,
+      "octaves": 3,
+      "lacunarity": 2.0,
+      "gain": 0.705
+    },
+    {
+      "name": "Micro Detail Humps",
+      "enabled": true,
+      "seed": 0,
+      "frequency": 0.016,
+      "amplitude": 0.42,
+      "offset": 3.508,
+      "noiseType": 1,
+      "fractalType": 0,
+      "octaves": 3,
+      "lacunarity": 2.0,
+      "gain": 0.5
+    }
+  ]
+}

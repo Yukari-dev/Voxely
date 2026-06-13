@@ -60,5 +60,13 @@ public class LightningSettingsWindow implements GuiWindow{
 
         ImGui.end();
     }
+
+    @Override
+    public void Save() {
+    }
+
+    @Override
+    public void Load() {
+    }
     
 }

@@ -37,7 +37,7 @@ public class TerrainGenerator {
 
         for (NoiseLayer layer : layers) {
             if (!layer.enabled) continue;
-
+            noiseInstance.SetSeed(layer.imguiSeed[0]);
             noiseInstance.SetNoiseType(NOISE_TYPES[layer.imguiNoiseType.get()]);
             noiseInstance.SetFractalType(FRACTAL_TYPES[layer.imguiFractalType.get()]);
             noiseInstance.SetFrequency(layer.imguiFreq[0]);

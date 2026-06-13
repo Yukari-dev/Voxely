@@ -5,6 +5,7 @@ import imgui.type.ImInt;
 public class NoiseLayer {
     public String name;
     public boolean enabled = true;
+    public int[] imguiSeed = new int[]{0};
 
     public float[] imguiFreq = new float[]{ 0.005f };
     public float[] imguiAmp = new float[]{ 32.0f };
